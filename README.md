@@ -18,11 +18,18 @@ scaffolded all at once. Currently implemented and functional:
 - **APK Manager** — finds `.apk` files in a granted folder, reads version/label metadata
   (via a temporary private-cache copy, since `PackageManager` needs a real file path),
   shows size and modified date, and supports multi-select delete.
+- **Zero-byte File Scanner** — recursively scans a granted folder tree for files exactly
+  0 bytes, skipping hidden/`Android` folders. Shows filename, location, modified date.
+  Select All / multi-select delete. Feeds the Dashboard's "last scan" time.
+- **Empty Folder Cleaner** — recursively finds directories with no real files anywhere
+  in their subtree (a folder full of only empty folders still counts). Only reports the
+  outermost empty folder in a branch, since deleting it removes everything nested inside.
+  Same skip-list and multi-select delete pattern as the other scanners.
 
-Not yet built: Duplicate Scanner, Zero-byte Scanner, Empty Folder Cleaner, Large File
-Scanner, Storage Analyzer charts, Search, Recycle Bin, Scan History UI, Settings. The
-`ScanHistoryRepository`/Room database and clean-architecture folders for these already
-exist so they can be added without restructuring.
+Not yet built: Duplicate Scanner, Large File Scanner, Storage Analyzer charts, Search,
+Recycle Bin, Scan History UI, Settings. The `ScanHistoryRepository`/Room database and
+clean-architecture folders for these already exist so they can be added without
+restructuring.
 
 ## Architecture
 

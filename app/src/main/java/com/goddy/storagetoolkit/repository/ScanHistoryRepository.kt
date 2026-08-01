@@ -7,7 +7,8 @@ import kotlinx.coroutines.flow.Flow
 enum class ScanType(val key: String) {
     DOWNLOADS_ORGANIZER("downloads_organizer"),
     APK_MANAGER("apk_manager"),
-    ZERO_BYTE("zero_byte")
+    ZERO_BYTE("zero_byte"),
+    EMPTY_FOLDER("empty_folder")
 }
 
 class ScanHistoryRepository(private val dao: ScanHistoryDao) {

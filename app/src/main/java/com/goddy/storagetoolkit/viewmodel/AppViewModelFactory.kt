@@ -22,6 +22,9 @@ class AppViewModelFactory(private val app: StorageToolkitApp) : ViewModelProvide
             ZeroByteViewModel::class.java ->
                 ZeroByteViewModel(app.safManager, app.zeroByteRepository, app.scanHistoryRepository) as T
 
+            EmptyFolderViewModel::class.java ->
+                EmptyFolderViewModel(app.safManager, app.emptyFolderRepository, app.scanHistoryRepository) as T
+
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     }

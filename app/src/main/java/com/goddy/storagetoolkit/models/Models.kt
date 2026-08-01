@@ -37,6 +37,15 @@ data class FileItem(
     val relativePath: String = ""
 )
 
+/** An empty directory discovered during a scan, referenced by its SAF document URI. */
+data class FolderItem(
+    val documentId: String,
+    val uriString: String,
+    val name: String,
+    val relativePath: String,
+    val lastModified: Long
+)
+
 data class StorageStats(
     val totalBytes: Long,
     val usedBytes: Long,
