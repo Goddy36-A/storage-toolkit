@@ -6,8 +6,10 @@ import com.goddy.storagetoolkit.data.datastore.PreferencesManager
 import com.goddy.storagetoolkit.repository.ApkRepository
 import com.goddy.storagetoolkit.repository.DownloadsRepository
 import com.goddy.storagetoolkit.repository.ScanHistoryRepository
+import com.goddy.storagetoolkit.repository.ZeroByteRepository
 import com.goddy.storagetoolkit.scanner.ApkScanner
 import com.goddy.storagetoolkit.scanner.DownloadsScanner
+import com.goddy.storagetoolkit.scanner.ZeroByteScanner
 import com.goddy.storagetoolkit.utils.SafManager
 
 /**
@@ -27,6 +29,8 @@ class StorageToolkitApp : Application() {
         private set
     lateinit var apkRepository: ApkRepository
         private set
+    lateinit var zeroByteRepository: ZeroByteRepository
+        private set
 
     override fun onCreate() {
         super.onCreate()
@@ -39,5 +43,6 @@ class StorageToolkitApp : Application() {
 
         downloadsRepository = DownloadsRepository(this, DownloadsScanner())
         apkRepository = ApkRepository(this, ApkScanner(this))
+        zeroByteRepository = ZeroByteRepository(this, ZeroByteScanner())
     }
 }

@@ -19,6 +19,9 @@ class AppViewModelFactory(private val app: StorageToolkitApp) : ViewModelProvide
             ApkManagerViewModel::class.java ->
                 ApkManagerViewModel(app.safManager, app.apkRepository, app.scanHistoryRepository) as T
 
+            ZeroByteViewModel::class.java ->
+                ZeroByteViewModel(app.safManager, app.zeroByteRepository, app.scanHistoryRepository) as T
+
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     }

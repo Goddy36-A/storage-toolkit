@@ -33,7 +33,8 @@ data class FileItem(
     val extension: String,
     val sizeBytes: Long,
     val lastModified: Long,
-    val category: FileCategory
+    val category: FileCategory,
+    val relativePath: String = ""
 )
 
 data class StorageStats(

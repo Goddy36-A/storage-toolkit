@@ -14,7 +14,8 @@ import kotlinx.coroutines.launch
 data class DashboardUiState(
     val storageStats: StorageStats = StorageStats(0, 0, 0),
     val downloadsLastScan: Long? = null,
-    val apkLastScan: Long? = null
+    val apkLastScan: Long? = null,
+    val zeroByteLastScan: Long? = null
 )
 
 class DashboardViewModel(
@@ -37,9 +38,11 @@ class DashboardViewModel(
         viewModelScope.launch {
             val downloadsTime = scanHistoryRepository.lastScanTime(ScanType.DOWNLOADS_ORGANIZER)
             val apkTime = scanHistoryRepository.lastScanTime(ScanType.APK_MANAGER)
+            val zeroByteTime = scanHistoryRepository.lastScanTime(ScanType.ZERO_BYTE)
             _uiState.value = _uiState.value.copy(
                 downloadsLastScan = downloadsTime,
-                apkLastScan = apkTime
+                apkLastScan = apkTime,
+                zeroByteLastScan = zeroByteTime
             )
         }
     }

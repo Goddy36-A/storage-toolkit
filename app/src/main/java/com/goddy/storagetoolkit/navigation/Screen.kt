@@ -4,4 +4,5 @@ sealed class Screen(val route: String) {
     data object Dashboard : Screen("dashboard")
     data object Downloads : Screen("downloads")
     data object ApkManager : Screen("apk_manager")
+    data object ZeroByte : Screen("zero_byte")
 }

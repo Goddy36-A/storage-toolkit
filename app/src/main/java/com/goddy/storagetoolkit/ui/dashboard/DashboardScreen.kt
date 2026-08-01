@@ -53,13 +53,14 @@ private data class QuickAction(
 fun DashboardScreen(
     viewModel: DashboardViewModel,
     onOpenDownloads: () -> Unit,
-    onOpenApkManager: () -> Unit
+    onOpenApkManager: () -> Unit,
+    onOpenZeroByte: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     val actions = listOf(
         QuickAction("Duplicate Files", Icons.Filled.ContentCopy, isAvailable = false),
-        QuickAction("Zero-byte Files", Icons.Filled.FileOpen, isAvailable = false),
+        QuickAction("Zero-byte Files", Icons.Filled.FileOpen, isAvailable = true, lastScanTime = uiState.zeroByteLastScan, onClick = onOpenZeroByte),
         QuickAction("Empty Folders", Icons.Filled.FolderOff, isAvailable = false),
         QuickAction("Large Files", Icons.Filled.Description, isAvailable = false),
         QuickAction("APK Files", Icons.Filled.Android, isAvailable = true, lastScanTime = uiState.apkLastScan, onClick = onOpenApkManager),
