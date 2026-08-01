@@ -5,6 +5,9 @@ on:
     branches: [ "main" ]
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,29 +28,38 @@ jobs:
         run: gradle assembleDebug --no-daemon 2>&1 | tee build_output.log
         continue-on-error: true
 
-      - name: Report build failure as commit comment
-        if: steps.build.outcome == 'failure'
+      - name: Publish diagnostics to repo
+        if: always()
         run: |
-          TAIL=$(tail -c 60000 build_output.log)
-          curl -s -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/comments \
-            -d "$(jq -n --arg body "$TAIL" '{body: $body}')"
+          {
+            echo "=== BUILD OUTCOME: ${{ steps.build.outcome }} ==="
+            echo "=== LAST 400 LINES OF BUILD LOG ==="
+            tail -n 400 build_output.log
+            echo ""
+            echo "=== APK OUTPUT FILES ==="
+            find app/build/outputs -type f 2>&1 || echo "outputs dir not found"
+          } > ci_diagnostics.log
+
+          CONTENT_B64=$(base64 -w0 ci_diagnostics.log)
+          SHA=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/contents/ci_diagnostics.log?ref=main" \
+            | jq -r '.sha // empty')
+
+          if [ -n "$SHA" ]; then
+            curl -s -X PUT -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/contents/ci_diagnostics.log" \
+              -d "$(jq -n --arg content "$CONTENT_B64" --arg sha "$SHA" '{message:"Update CI diagnostics",content:$content,branch:"main",sha:$sha}')"
+          else
+            curl -s -X PUT -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/contents/ci_diagnostics.log" \
+              -d "$(jq -n --arg content "$CONTENT_B64" '{message:"Add CI diagnostics",content:$content,branch:"main"}')"
+          fi
 
       - name: Fail job if build failed
         if: steps.build.outcome == 'failure'
         run: exit 1
-
-      - name: List build outputs
-        if: always()
-        run: |
-          { find app/build/outputs -type f 2>&1 || echo "outputs dir not found"; } > outputs_listing.log
-          curl -s -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/comments \
-            -d "$(jq -n --arg body "$(cat outputs_listing.log)" '{body: $body}')"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
