@@ -28,6 +28,9 @@ class AppViewModelFactory(private val app: StorageToolkitApp) : ViewModelProvide
             DuplicateViewModel::class.java ->
                 DuplicateViewModel(app.storageAccessManager, app.duplicateRepository, app.scanHistoryRepository) as T
 
+            LargeFileViewModel::class.java ->
+                LargeFileViewModel(app.storageAccessManager, app.largeFileRepository, app.scanHistoryRepository) as T
+
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     }

@@ -9,7 +9,8 @@ enum class ScanType(val key: String) {
     APK_MANAGER("apk_manager"),
     ZERO_BYTE("zero_byte"),
     EMPTY_FOLDER("empty_folder"),
-    DUPLICATE_FILES("duplicate_files")
+    DUPLICATE_FILES("duplicate_files"),
+    LARGE_FILES("large_files")
 }
 
 class ScanHistoryRepository(private val dao: ScanHistoryDao) {

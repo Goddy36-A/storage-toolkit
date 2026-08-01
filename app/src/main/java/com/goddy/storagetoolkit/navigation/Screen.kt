@@ -7,4 +7,5 @@ sealed class Screen(val route: String) {
     data object ZeroByte : Screen("zero_byte")
     data object EmptyFolder : Screen("empty_folder")
     data object Duplicate : Screen("duplicate")
+    data object LargeFile : Screen("large_file")
 }

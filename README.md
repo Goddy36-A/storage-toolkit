@@ -32,10 +32,16 @@ scaffolded all at once. Currently implemented and functional:
   actually hashed. Each group's oldest file is the suggested keeper; "Select duplicates
   (keep 1 each)" pre-selects everything else for deletion. Sortable by wasted space,
   name, or date.
+- **Large File Scanner** — recursively finds files at or above 100 MB (scanned once at
+  the lowest tier so switching the 100MB/500MB/1GB filter chip doesn't need a rescan).
+  Sortable by size, name, or date. Tapping "Preview" opens a dialog with size/location/
+  modified date before deleting -- and a downsampled thumbnail for images, decoded at a
+  bounded resolution so a multi-hundred-MB photo doesn't get fully loaded into memory
+  just to preview it.
 
-Not yet built: Large File Scanner, Storage Analyzer charts, Search, Recycle Bin, Scan
-History UI, Settings. The `ScanHistoryRepository`/Room database and clean-architecture
-folders for these already exist so they can be added without restructuring.
+Not yet built: Storage Analyzer charts, Search, Recycle Bin, Scan History UI, Settings.
+The `ScanHistoryRepository`/Room database and clean-architecture folders for these
+already exist so they can be added without restructuring.
 
 ## Architecture
 

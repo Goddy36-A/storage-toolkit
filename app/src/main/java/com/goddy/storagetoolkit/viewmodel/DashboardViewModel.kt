@@ -17,7 +17,8 @@ data class DashboardUiState(
     val apkLastScan: Long? = null,
     val zeroByteLastScan: Long? = null,
     val emptyFolderLastScan: Long? = null,
-    val duplicateLastScan: Long? = null
+    val duplicateLastScan: Long? = null,
+    val largeFileLastScan: Long? = null
 )
 
 class DashboardViewModel(
@@ -43,12 +44,14 @@ class DashboardViewModel(
             val zeroByteTime = scanHistoryRepository.lastScanTime(ScanType.ZERO_BYTE)
             val emptyFolderTime = scanHistoryRepository.lastScanTime(ScanType.EMPTY_FOLDER)
             val duplicateTime = scanHistoryRepository.lastScanTime(ScanType.DUPLICATE_FILES)
+            val largeFileTime = scanHistoryRepository.lastScanTime(ScanType.LARGE_FILES)
             _uiState.value = _uiState.value.copy(
                 downloadsLastScan = downloadsTime,
                 apkLastScan = apkTime,
                 zeroByteLastScan = zeroByteTime,
                 emptyFolderLastScan = emptyFolderTime,
-                duplicateLastScan = duplicateTime
+                duplicateLastScan = duplicateTime,
+                largeFileLastScan = largeFileTime
             )
         }
     }
