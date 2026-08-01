@@ -32,8 +32,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.goddy.storagetoolkit.ui.common.FolderAccessPrompt
+import com.goddy.storagetoolkit.ui.common.OnResumeEffect
 import com.goddy.storagetoolkit.utils.FileUtils
 import com.goddy.storagetoolkit.viewmodel.EmptyFolderViewModel
 
@@ -41,10 +43,13 @@ import com.goddy.storagetoolkit.viewmodel.EmptyFolderViewModel
 @Composable
 fun EmptyFolderScreen(viewModel: EmptyFolderViewModel, onBack: () -> Unit) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
-    val folderPicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocumentTree()
-    ) { uri -> uri?.let { viewModel.onFolderGranted(it) } }
+    val legacyPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { viewModel.refreshAccess() }
+
+    OnResumeEffect { viewModel.refreshAccess() }
 
     Scaffold(
         topBar = {
@@ -69,8 +74,14 @@ fun EmptyFolderScreen(viewModel: EmptyFolderViewModel, onBack: () -> Unit) {
             when {
                 !uiState.hasFolderAccess -> {
                     FolderAccessPrompt(
-                        message = "Grant access to a folder to scan for empty subfolders inside it, including nested ones.",
-                        onRequestAccess = { folderPicker.launch(null) }
+                        message = "Grant storage access to scan your whole device for empty subfolders, including nested ones.",
+                        onRequestAccess = {
+                            if (viewModel.needsLegacyPermission) {
+                                legacyPermissionLauncher.launch(viewModel.legacyPermission)
+                            } else {
+                                context.startActivity(viewModel.requestIntent())
+                            }
+                        }
                     )
                 }
                 uiState.isScanning -> {

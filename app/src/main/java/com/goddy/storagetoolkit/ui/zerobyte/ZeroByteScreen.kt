@@ -31,8 +31,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.goddy.storagetoolkit.ui.common.FolderAccessPrompt
+import com.goddy.storagetoolkit.ui.common.OnResumeEffect
 import com.goddy.storagetoolkit.utils.FileUtils
 import com.goddy.storagetoolkit.viewmodel.ZeroByteViewModel
 
@@ -40,10 +42,13 @@ import com.goddy.storagetoolkit.viewmodel.ZeroByteViewModel
 @Composable
 fun ZeroByteScreen(viewModel: ZeroByteViewModel, onBack: () -> Unit) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
-    val folderPicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocumentTree()
-    ) { uri -> uri?.let { viewModel.onFolderGranted(it) } }
+    val legacyPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { viewModel.refreshAccess() }
+
+    OnResumeEffect { viewModel.refreshAccess() }
 
     Scaffold(
         topBar = {
@@ -68,8 +73,14 @@ fun ZeroByteScreen(viewModel: ZeroByteViewModel, onBack: () -> Unit) {
             when {
                 !uiState.hasFolderAccess -> {
                     FolderAccessPrompt(
-                        message = "Grant access to a folder to scan for empty (0-byte) files inside it, including subfolders.",
-                        onRequestAccess = { folderPicker.launch(null) }
+                        message = "Grant storage access to scan your whole device for zero-byte files.",
+                        onRequestAccess = {
+                            if (viewModel.needsLegacyPermission) {
+                                legacyPermissionLauncher.launch(viewModel.legacyPermission)
+                            } else {
+                                context.startActivity(viewModel.requestIntent())
+                            }
+                        }
                     )
                 }
                 uiState.isScanning -> {
@@ -91,7 +102,7 @@ fun ZeroByteScreen(viewModel: ZeroByteViewModel, onBack: () -> Unit) {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text("No zero-byte files found. Your folder is clean!")
+                        Text("No zero-byte files found. Your storage is clean!")
                     }
                 }
                 else -> {

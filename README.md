@@ -12,15 +12,16 @@ scaffolded all at once. Currently implemented and functional:
 - **Home Dashboard** — total/used/free storage (via `StatFs`), circular usage chart,
   quick-action grid. Cards for features not yet built are clearly marked "Coming soon"
   rather than showing fake data.
-- **Downloads Organizer** — scans a user-granted folder via the Storage Access Framework,
-  classifies files by extension (Images/Videos/Audio/Documents/Archives/APKs/Others), and
-  moves them into matching subfolders using `DocumentsContract.moveDocument`.
-- **APK Manager** — finds `.apk` files in a granted folder, reads version/label metadata
-  (via a temporary private-cache copy, since `PackageManager` needs a real file path),
-  shows size and modified date, and supports multi-select delete.
-- **Zero-byte File Scanner** — recursively scans a granted folder tree for files exactly
-  0 bytes, skipping hidden/`Android` folders. Shows filename, location, modified date.
-  Select All / multi-select delete. Feeds the Dashboard's "last scan" time.
+- **Downloads Organizer** — scans the Downloads folder, classifies files by extension
+  (Images/Videos/Audio/Documents/Archives/APKs/Others), and moves them into matching
+  subfolders via a plain file move.
+- **APK Manager** — recursively finds `.apk` files across the whole accessible storage
+  volume, reads version/label metadata (via a temporary private-cache copy, since
+  `PackageManager` needs a real file path), shows size and modified date, and supports
+  multi-select delete.
+- **Zero-byte File Scanner** — recursively scans the whole accessible storage volume for
+  files exactly 0 bytes, skipping hidden/`Android` folders. Shows filename, location,
+  modified date. Select All / multi-select delete. Feeds the Dashboard's "last scan" time.
 - **Empty Folder Cleaner** — recursively finds directories with no real files anywhere
   in their subtree (a folder full of only empty folders still counts). Only reports the
   outermost empty folder in a branch, since deleting it removes everything nested inside.
@@ -36,20 +37,36 @@ restructuring.
 ```
 ui/            Compose screens, grouped by feature
 navigation/     NavHost + route definitions
-scanner/        Pure scanning logic (SAF-based, cancellable, Dispatchers.IO)
-data/           Room database + DataStore preferences
+scanner/        Pure scanning logic (cancellable, Dispatchers.IO)
+data/           Room database
 repository/     Mediates between scanners/database and ViewModels
 models/         Data classes shared across layers
-utils/          FileUtils, StorageStatsUtil, SafManager
+utils/          FileUtils, StorageAccessManager, StorageRoots
 viewmodel/      MVVM state holders, StateFlow-based
 ```
 
 ## Permissions
 
-Deliberately minimal: no `READ_EXTERNAL_STORAGE`, no `MANAGE_EXTERNAL_STORAGE`. Folder
-access is granted per-session by the user via `ACTION_OPEN_DOCUMENT_TREE` (Storage Access
-Framework) and persisted with a permanent URI permission — the approach Google recommends
-for scoped storage on Android 11+.
+Uses `MANAGE_EXTERNAL_STORAGE` ("All Files Access", Android 11+), with legacy
+`READ/WRITE_EXTERNAL_STORAGE` for Android 10 and below. **This replaced an earlier
+per-feature Storage Access Framework design** — the SAF version required granting a
+folder separately for each feature, and whichever folder got granted first (or last,
+from any screen) silently became the shared root for every scanner, with no way to see
+or fix that from within the app. All Files Access is a deliberate scope decision, not a
+shortcut: Storage Toolkit's entire purpose is managing files across shared storage,
+which is exactly the "core functionality" carve-out Play Store policy allows for this
+permission — a generic utility app bolting it on for a minor feature would not qualify.
+
+One grant now covers the whole app. The grant happens in system Settings (there's no
+in-app callback for it), so each screen re-checks permission state via `OnResumeEffect`
+when you back out of Settings.
+
+- `utils/StorageAccessManager.kt` — checks/requests the permission
+- `utils/StorageRoots.kt` — fixed roots (`primary()` = whole storage, `downloads()` =
+  just the Downloads folder) that scanners read from; no per-feature folder picking
+- `utils/FileUtils.resolveDocumentFile()` — reconstructs a file-backed `DocumentFile` for
+  delete/move ops; the old `DocumentFile.fromSingleUri` only works for `content://` SAF
+  tree URIs, not the `file://` paths All Files Access gives us
 
 ## Build
 

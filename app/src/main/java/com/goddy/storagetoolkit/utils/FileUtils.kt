@@ -1,5 +1,9 @@
 package com.goddy.storagetoolkit.utils
 
+import android.content.Context
+import android.net.Uri
+import androidx.documentfile.provider.DocumentFile
+import java.io.File
 import java.text.DateFormat
 import java.util.Date
 import kotlin.math.ln
@@ -25,4 +29,20 @@ object FileUtils {
         val dotIndex = fileName.lastIndexOf('.')
         return if (dotIndex >= 0 && dotIndex < fileName.length - 1) fileName.substring(dotIndex + 1) else ""
     }
+
+    /**
+     * Reconstructs a [DocumentFile] from a stored URI string for delete/move operations.
+     * `file://` URIs (from [StorageRoots], i.e. All Files Access) need [DocumentFile.fromFile]
+     * — [DocumentFile.fromSingleUri] only works for `content://` tree-document URIs and
+     * silently fails (or throws) on a plain file path.
+     */
+    fun resolveDocumentFile(context: Context, uriString: String): DocumentFile? {
+        val uri = Uri.parse(uriString)
+        return if (uri.scheme == "file") {
+            uri.path?.let { DocumentFile.fromFile(File(it)) }
+        } else {
+            DocumentFile.fromSingleUri(context, uri)
+        }
+    }
 }
+

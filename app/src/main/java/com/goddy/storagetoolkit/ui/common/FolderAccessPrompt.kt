@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun FolderAccessPrompt(
-    message: String = "Grant access to a folder (e.g. Downloads) to get started",
+    message: String = "Grant storage access to get started",
     onRequestAccess: () -> Unit
 ) {
     Column(
@@ -32,7 +32,7 @@ fun FolderAccessPrompt(
         )
         Text(text = message, style = MaterialTheme.typography.bodyLarge)
         Button(onClick = onRequestAccess, modifier = Modifier.padding(top = 24.dp)) {
-            Text("Choose Folder")
+            Text("Grant Access")
         }
     }
 }

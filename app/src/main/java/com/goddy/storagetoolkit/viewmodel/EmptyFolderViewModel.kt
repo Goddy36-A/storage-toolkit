@@ -1,13 +1,13 @@
 package com.goddy.storagetoolkit.viewmodel
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.goddy.storagetoolkit.models.FolderItem
 import com.goddy.storagetoolkit.repository.EmptyFolderRepository
 import com.goddy.storagetoolkit.repository.ScanHistoryRepository
 import com.goddy.storagetoolkit.repository.ScanType
-import com.goddy.storagetoolkit.utils.SafManager
+import com.goddy.storagetoolkit.utils.StorageAccessManager
+import com.goddy.storagetoolkit.utils.StorageRoots
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +23,7 @@ data class EmptyFolderUiState(
 )
 
 class EmptyFolderViewModel(
-    private val safManager: SafManager,
+    private val storageAccessManager: StorageAccessManager,
     private val emptyFolderRepository: EmptyFolderRepository,
     private val scanHistoryRepository: ScanHistoryRepository
 ) : ViewModel() {
@@ -31,36 +31,31 @@ class EmptyFolderViewModel(
     private val _uiState = MutableStateFlow(EmptyFolderUiState())
     val uiState: StateFlow<EmptyFolderUiState> = _uiState.asStateFlow()
 
-    private var treeUriString: String? = null
+    val needsLegacyPermission: Boolean get() = storageAccessManager.needsLegacyFlow
+    val legacyPermission: String get() = storageAccessManager.legacyPermission
+    fun requestIntent() = storageAccessManager.buildRequestIntent()
+
     private var scanJob: Job? = null
 
     init {
         viewModelScope.launch {
-            safManager.treeUriFlow.collect { uri ->
-                treeUriString = uri
-                _uiState.value = _uiState.value.copy(hasFolderAccess = uri != null)
-                if (uri != null) scan()
+            storageAccessManager.grantedFlow.collect { granted ->
+                _uiState.value = _uiState.value.copy(hasFolderAccess = granted)
+                if (granted) scan()
             }
         }
     }
 
-    fun onFolderGranted(uri: Uri) {
-        viewModelScope.launch {
-            safManager.persistTreeUri(uri)
-        }
+    fun refreshAccess() {
+        storageAccessManager.refresh()
     }
 
     fun scan() {
-        val uriString = treeUriString ?: return
+        if (!_uiState.value.hasFolderAccess) return
         scanJob?.cancel()
         scanJob = viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isScanning = true, statusMessage = null)
-            val root = safManager.getDocumentTree(uriString)
-            if (root == null) {
-                _uiState.value = _uiState.value.copy(isScanning = false, statusMessage = "Could not open folder")
-                return@launch
-            }
-            val folders = emptyFolderRepository.scan(root)
+            val folders = emptyFolderRepository.scan(StorageRoots.primary())
             scanHistoryRepository.record(
                 scanType = ScanType.EMPTY_FOLDER,
                 filesFound = folders.size,

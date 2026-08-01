@@ -14,16 +14,16 @@ class AppViewModelFactory(private val app: StorageToolkitApp) : ViewModelProvide
                 DashboardViewModel(app.scanHistoryRepository) as T
 
             DownloadsViewModel::class.java ->
-                DownloadsViewModel(app.safManager, app.downloadsRepository, app.scanHistoryRepository) as T
+                DownloadsViewModel(app.storageAccessManager, app.downloadsRepository, app.scanHistoryRepository) as T
 
             ApkManagerViewModel::class.java ->
-                ApkManagerViewModel(app.safManager, app.apkRepository, app.scanHistoryRepository) as T
+                ApkManagerViewModel(app.storageAccessManager, app.apkRepository, app.scanHistoryRepository) as T
 
             ZeroByteViewModel::class.java ->
-                ZeroByteViewModel(app.safManager, app.zeroByteRepository, app.scanHistoryRepository) as T
+                ZeroByteViewModel(app.storageAccessManager, app.zeroByteRepository, app.scanHistoryRepository) as T
 
             EmptyFolderViewModel::class.java ->
-                EmptyFolderViewModel(app.safManager, app.emptyFolderRepository, app.scanHistoryRepository) as T
+                EmptyFolderViewModel(app.storageAccessManager, app.emptyFolderRepository, app.scanHistoryRepository) as T
 
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

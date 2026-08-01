@@ -11,27 +11,44 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
- * Finds .apk files in a SAF-granted folder and reads install metadata.
+ * Recursively finds .apk files across a folder tree and reads their install metadata.
+ * Skips hidden folders and "Android", same as the other scanners.
  *
- * PackageManager.getPackageArchiveInfo requires a real filesystem path, but SAF only
- * gives us content:// URIs. We copy each APK into the app's private cache directory
- * (no extra permission needed) just long enough to read its metadata, then delete it.
+ * PackageManager.getPackageArchiveInfo requires a real filesystem path. That's always
+ * true now (All Files Access gives file:// paths directly), but we still copy into the
+ * app's private cache first rather than pass the original path — getPackageArchiveInfo
+ * can leave the archive briefly locked/cached by the system, and we don't want that
+ * touching the user's original file.
  */
 class ApkScanner(private val context: Context) {
 
+    private val skippedFolderNames = setOf("Android")
+
     suspend fun scan(root: DocumentFile): List<ApkFileInfo> = withContext(Dispatchers.IO) {
         val results = mutableListOf<ApkFileInfo>()
+        walk(root, results)
+        results
+    }
+
+    private suspend fun walk(folder: DocumentFile, results: MutableList<ApkFileInfo>) {
+        currentCoroutineContext().ensureActive()
         val pm = context.packageManager
 
-        for (child in root.listFiles()) {
+        for (child in folder.listFiles()) {
             currentCoroutineContext().ensureActive()
-            if (child.isDirectory) continue
             val name = child.name ?: continue
+
+            if (child.isDirectory) {
+                if (name.startsWith(".") || name in skippedFolderNames) continue
+                walk(child, results)
+                continue
+            }
+
             if (!name.endsWith(".apk", ignoreCase = true)) continue
 
             var versionName: String? = null
             var appLabel: String? = null
-            val tempFile = File(context.cacheDir, "scan_${child.uri.lastPathSegment?.hashCode()}.apk")
+            val tempFile = File(context.cacheDir, "scan_${child.uri.toString().hashCode()}.apk")
             try {
                 context.contentResolver.openInputStream(child.uri)?.use { input ->
                     tempFile.outputStream().use { output -> input.copyTo(output) }
@@ -52,7 +69,7 @@ class ApkScanner(private val context: Context) {
             }
 
             results += ApkFileInfo(
-                documentId = child.uri.lastPathSegment ?: name,
+                documentId = child.uri.toString(),
                 uriString = child.uri.toString(),
                 name = name,
                 sizeBytes = child.length(),
@@ -61,6 +78,5 @@ class ApkScanner(private val context: Context) {
                 appLabel = appLabel
             )
         }
-        results
     }
 }

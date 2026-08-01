@@ -23,7 +23,7 @@ class DownloadsScanner {
             val name = child.name ?: continue
             val extension = FileUtils.extensionOf(name)
             results += FileItem(
-                documentId = child.uri.lastPathSegment ?: name,
+                documentId = child.uri.toString(),
                 uriString = child.uri.toString(),
                 name = name,
                 extension = extension,

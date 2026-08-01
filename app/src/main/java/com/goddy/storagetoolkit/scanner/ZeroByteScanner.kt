@@ -40,7 +40,7 @@ class ZeroByteScanner {
             if (child.length() == 0L) {
                 val extension = FileUtils.extensionOf(name)
                 results += FileItem(
-                    documentId = child.uri.lastPathSegment ?: name,
+                    documentId = child.uri.toString(),
                     uriString = child.uri.toString(),
                     name = name,
                     extension = extension,

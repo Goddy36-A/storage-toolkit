@@ -1,16 +1,15 @@
 package com.goddy.storagetoolkit.repository
 
-import android.content.Context
-import android.provider.DocumentsContract
+import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import com.goddy.storagetoolkit.models.FileCategory
 import com.goddy.storagetoolkit.models.FileItem
 import com.goddy.storagetoolkit.scanner.DownloadsScanner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class DownloadsRepository(
-    private val context: Context,
     private val scanner: DownloadsScanner
 ) {
 
@@ -18,40 +17,35 @@ class DownloadsRepository(
 
     /**
      * Moves each given file into a same-named subfolder of [root] based on its category,
-     * e.g. Downloads/Images, Downloads/Documents. Uses DocumentsContract.moveDocument so
-     * the move happens within the same SAF tree without a copy+delete round trip.
+     * e.g. Downloads/Images, Downloads/Documents. With All Files Access, everything here
+     * is a real filesystem path, so this is a plain File move -- File.renameTo first
+     * (instant, same volume), falling back to copy+delete only if that fails (e.g. a
+     * cross-filesystem move, which renameTo can't do).
      */
     suspend fun organize(root: DocumentFile, files: List<FileItem>): Int = withContext(Dispatchers.IO) {
         var movedCount = 0
-        val resolver = context.contentResolver
-        val folderCache = mutableMapOf<FileCategory, DocumentFile>()
+        val rootPath = Uri.parse(root.uri.toString()).path ?: return@withContext 0
+        val folderCache = mutableMapOf<FileCategory, File>()
 
         for (item in files) {
-            val cachedFolder = folderCache[item.category]
-            val targetFolder: DocumentFile = if (cachedFolder != null) {
-                cachedFolder
-            } else {
-                val resolvedFolder = root.findFile(item.category.label)
-                    ?: root.createDirectory(item.category.label)
-                if (resolvedFolder == null) continue
-                folderCache[item.category] = resolvedFolder
-                resolvedFolder
+            val targetDir = folderCache.getOrPut(item.category) {
+                File(rootPath, item.category.label).apply { if (!exists()) mkdirs() }
             }
 
-            val sourceDoc = DocumentFile.fromSingleUri(context, android.net.Uri.parse(item.uriString)) ?: continue
-            val sourceParentUri = root.uri
-            try {
-                DocumentsContract.moveDocument(
-                    resolver,
-                    sourceDoc.uri,
-                    sourceParentUri,
-                    targetFolder.uri
-                )
-                movedCount++
+            val sourcePath = Uri.parse(item.uriString).path ?: continue
+            val sourceFile = File(sourcePath)
+            if (!sourceFile.exists()) continue
+
+            val targetFile = File(targetDir, sourceFile.name)
+            val moved = try {
+                sourceFile.renameTo(targetFile) || run {
+                    sourceFile.copyTo(targetFile, overwrite = true)
+                    sourceFile.delete()
+                }
             } catch (e: Exception) {
-                // Skip files that fail to move (e.g. already organized, permission edge case)
-                // and continue with the rest of the batch.
+                false
             }
+            if (moved) movedCount++
         }
         movedCount
     }

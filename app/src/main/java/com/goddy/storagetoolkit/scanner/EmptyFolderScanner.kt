@@ -66,7 +66,7 @@ class EmptyFolderScanner {
 
         for ((child, path) in emptyChildFolders) {
             results += FolderItem(
-                documentId = child.uri.lastPathSegment ?: path,
+                documentId = child.uri.toString(),
                 uriString = child.uri.toString(),
                 name = child.name ?: path,
                 relativePath = path,

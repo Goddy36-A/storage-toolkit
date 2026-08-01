@@ -2,17 +2,16 @@ package com.goddy.storagetoolkit
 
 import android.app.Application
 import com.goddy.storagetoolkit.data.database.AppDatabase
-import com.goddy.storagetoolkit.data.datastore.PreferencesManager
 import com.goddy.storagetoolkit.repository.ApkRepository
 import com.goddy.storagetoolkit.repository.DownloadsRepository
-import com.goddy.storagetoolkit.repository.ScanHistoryRepository
 import com.goddy.storagetoolkit.repository.EmptyFolderRepository
+import com.goddy.storagetoolkit.repository.ScanHistoryRepository
 import com.goddy.storagetoolkit.repository.ZeroByteRepository
 import com.goddy.storagetoolkit.scanner.ApkScanner
 import com.goddy.storagetoolkit.scanner.DownloadsScanner
 import com.goddy.storagetoolkit.scanner.EmptyFolderScanner
 import com.goddy.storagetoolkit.scanner.ZeroByteScanner
-import com.goddy.storagetoolkit.utils.SafManager
+import com.goddy.storagetoolkit.utils.StorageAccessManager
 
 /**
  * Lightweight manual DI container. The app is small enough that a DI framework like
@@ -21,9 +20,7 @@ import com.goddy.storagetoolkit.utils.SafManager
  */
 class StorageToolkitApp : Application() {
 
-    lateinit var preferencesManager: PreferencesManager
-        private set
-    lateinit var safManager: SafManager
+    lateinit var storageAccessManager: StorageAccessManager
         private set
     lateinit var scanHistoryRepository: ScanHistoryRepository
         private set
@@ -39,13 +36,12 @@ class StorageToolkitApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        preferencesManager = PreferencesManager(this)
-        safManager = SafManager(this, preferencesManager)
+        storageAccessManager = StorageAccessManager(this)
 
         val database = AppDatabase.getInstance(this)
         scanHistoryRepository = ScanHistoryRepository(database.scanHistoryDao())
 
-        downloadsRepository = DownloadsRepository(this, DownloadsScanner())
+        downloadsRepository = DownloadsRepository(DownloadsScanner())
         apkRepository = ApkRepository(this, ApkScanner(this))
         zeroByteRepository = ZeroByteRepository(this, ZeroByteScanner())
         emptyFolderRepository = EmptyFolderRepository(this, EmptyFolderScanner())
