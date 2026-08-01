@@ -21,7 +21,23 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build debug APK
-        run: gradle assembleDebug --no-daemon
+        id: build
+        run: gradle assembleDebug --no-daemon 2>&1 | tee build_output.log
+        continue-on-error: true
+
+      - name: Report build failure as commit comment
+        if: steps.build.outcome == 'failure'
+        run: |
+          TAIL=$(tail -c 60000 build_output.log)
+          curl -s -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/comments \
+            -d "$(jq -n --arg body "$TAIL" '{body: $body}')"
+
+      - name: Fail job if build failed
+        if: steps.build.outcome == 'failure'
+        run: exit 1
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
