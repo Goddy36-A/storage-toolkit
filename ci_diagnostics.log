@@ -42,27 +42,35 @@ Unable to strip the following libraries, packaging them as they are: libdatastor
 > Task :app:kspDebugKotlin
 > Task :app:mergeExtDexDebug
 
-> Task :app:compileDebugKotlin FAILED
-e: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/common/OnResumeEffect.kt:18:26 Type 'State<() -> Unit>' has no method 'getValue(Nothing?, KProperty<*>)' and thus it cannot serve as a delegate
-e: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/dashboard/DashboardScreen.kt:83:75 Unresolved reference: Settings
-e: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/largefile/LargeFileScreen.kt:48:28 Unresolved reference: asImageBitmap
-e: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/largefile/LargeFileScreen.kt:263:38 Unresolved reference: asImageBitmap
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1785607805118.json
+> Task :app:compileDebugKotlin
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/apkmanager/ApkManagerScreen.kt:59:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/downloads/DownloadsScreen.kt:57:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/duplicate/DuplicateScreen.kt:67:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/duplicate/DuplicateScreen.kt:74:51 'Sort: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Sort
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/emptyfolder/EmptyFolderScreen.kt:60:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/largefile/LargeFileScreen.kt:81:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/largefile/LargeFileScreen.kt:88:51 'Sort: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Sort
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/settings/AboutScreen.kt:31:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/settings/PrivacyPolicyScreen.kt:30:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/settings/SettingsScreen.kt:58:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/settings/SettingsScreen.kt:74:20 'Divider(Modifier = ..., Dp = ..., Color = ...): Unit' is deprecated. Renamed to HorizontalDivider
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/settings/SettingsScreen.kt:97:20 'Divider(Modifier = ..., Dp = ..., Color = ...): Unit' is deprecated. Renamed to HorizontalDivider
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/settings/SettingsScreen.kt:145:20 'Divider(Modifier = ..., Dp = ..., Color = ...): Unit' is deprecated. Renamed to HorizontalDivider
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/settings/SettingsScreen.kt:163:20 'Divider(Modifier = ..., Dp = ..., Color = ...): Unit' is deprecated. Renamed to HorizontalDivider
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/zerobyte/ZeroByteScreen.kt:59:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+
+> Task :app:compileDebugJavaWithJavac
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:processDebugJavaRes
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeDebugJavaResource
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1785608024995.json
 
 [Incubating] Problems report is available at: file:///home/runner/work/storage-toolkit/storage-toolkit/build/reports/problems/problems-report.html
-
-FAILURE: Build failed with an exception.
-
-* What went wrong:
-Execution failed for task ':app:compileDebugKotlin' (registered by plugin 'org.jetbrains.kotlin.android').
-> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
-   > Compilation error. See log for more details
-
-* Try:
-> Run with --stacktrace option to get the stack trace.
-> Run with --info or --debug option to get more log output.
-> Run with --scan to get full insights from a Build Scan (powered by Develocity).
-> Get more help at https://help.gradle.org.
 
 Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
 
@@ -70,8 +78,11 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD FAILED in 47s
-32 actionable tasks: 32 executed
+BUILD SUCCESSFUL in 1m 5s
+40 actionable tasks: 40 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.6.1/userguide/configuration_cache_enabling.html
 
 === APK OUTPUT FILES ===
 app/build/outputs/logs/manifest-merger-debug-report.txt
+app/build/outputs/apk/debug/app-debug.apk
+app/build/outputs/apk/debug/output-metadata.json
