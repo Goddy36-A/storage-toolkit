@@ -22,10 +22,12 @@ import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material.icons.filled.FolderOff
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -79,8 +81,8 @@ fun DashboardScreen(
             TopAppBar(
                 title = { Text("Storage Toolkit") },
                 actions = {
-                    androidx.compose.material3.IconButton(onClick = onOpenSettings) {
-                        Icon(androidx.compose.material.icons.Icons.Filled.Settings, contentDescription = "Settings")
+                    IconButton(onClick = onOpenSettings) {
+                        Icon(Icons.Filled.Settings, contentDescription = "Settings")
                     }
                 }
             )
