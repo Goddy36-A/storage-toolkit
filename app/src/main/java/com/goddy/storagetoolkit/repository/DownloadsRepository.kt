@@ -27,9 +27,15 @@ class DownloadsRepository(
         val folderCache = mutableMapOf<FileCategory, DocumentFile>()
 
         for (item in files) {
-            val targetFolder = folderCache.getOrPut(item.category) {
-                root.findFile(item.category.label) ?: root.createDirectory(item.category.label)
-                ?: continue
+            val cachedFolder = folderCache[item.category]
+            val targetFolder: DocumentFile = if (cachedFolder != null) {
+                cachedFolder
+            } else {
+                val resolvedFolder = root.findFile(item.category.label)
+                    ?: root.createDirectory(item.category.label)
+                if (resolvedFolder == null) continue
+                folderCache[item.category] = resolvedFolder
+                resolvedFolder
             }
 
             val sourceDoc = DocumentFile.fromSingleUri(context, android.net.Uri.parse(item.uriString)) ?: continue
