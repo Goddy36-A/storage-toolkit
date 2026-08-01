@@ -17,7 +17,6 @@ Daemon will be stopped at the end of the build
 > Task :app:parseDebugLocalResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
-> Task :app:processDebugManifestForPackage
 > Task :app:javaPreCompileDebug
 > Task :app:mergeDebugShaders
 > Task :app:compileDebugShaders NO-SOURCE
@@ -25,22 +24,23 @@ Daemon will be stopped at the end of the build
 > Task :app:mergeDebugAssets
 > Task :app:compressDebugAssets
 > Task :app:desugarDebugFileDependencies
+> Task :app:processDebugManifestForPackage
+> Task :app:checkDebugDuplicateClasses
 > Task :app:mergeDebugStartupProfile
 > Task :app:mergeDebugJniLibFolders
-> Task :app:checkDebugDuplicateClasses
-> Task :app:mergeDebugNativeLibs NO-SOURCE
-> Task :app:processDebugResources
-> Task :app:stripDebugDebugSymbols NO-SOURCE
 > Task :app:mergeLibDexDebug
+> Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:processDebugResources
 > Task :app:validateSigningDebug
 > Task :app:writeDebugAppMetadata
 > Task :app:writeDebugSigningConfigVersions
-> Task :app:kspDebugKotlin
 > Task :app:mergeExtDexDebug
+> Task :app:kspDebugKotlin
 
 > Task :app:compileDebugKotlin FAILED
 e: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/common/OnResumeEffect.kt:18:26 Type 'State<() -> Unit>' has no method 'getValue(Nothing?, KProperty<*>)' and thus it cannot serve as a delegate
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1785584887166.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1785585164505.json
 
 [Incubating] Problems report is available at: file:///home/runner/work/storage-toolkit/storage-toolkit/build/reports/problems/problems-report.html
 
@@ -63,7 +63,7 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD FAILED in 1m 2s
+BUILD FAILED in 46s
 29 actionable tasks: 29 executed
 
 === APK OUTPUT FILES ===
