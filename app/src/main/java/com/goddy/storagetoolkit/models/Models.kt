@@ -46,6 +46,15 @@ data class FolderItem(
     val lastModified: Long
 )
 
+/** A group of files sharing the same SHA-256 hash. files[0] is the suggested keeper. */
+data class DuplicateGroup(
+    val hash: String,
+    val files: List<FileItem>
+) {
+    val wastedBytes: Long
+        get() = if (files.size <= 1) 0L else files.drop(1).sumOf { it.sizeBytes }
+}
+
 data class StorageStats(
     val totalBytes: Long,
     val usedBytes: Long,

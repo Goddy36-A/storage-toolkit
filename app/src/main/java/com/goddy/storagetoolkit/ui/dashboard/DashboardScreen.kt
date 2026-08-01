@@ -55,12 +55,13 @@ fun DashboardScreen(
     onOpenDownloads: () -> Unit,
     onOpenApkManager: () -> Unit,
     onOpenZeroByte: () -> Unit,
-    onOpenEmptyFolder: () -> Unit
+    onOpenEmptyFolder: () -> Unit,
+    onOpenDuplicate: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     val actions = listOf(
-        QuickAction("Duplicate Files", Icons.Filled.ContentCopy, isAvailable = false),
+        QuickAction("Duplicate Files", Icons.Filled.ContentCopy, isAvailable = true, lastScanTime = uiState.duplicateLastScan, onClick = onOpenDuplicate),
         QuickAction("Zero-byte Files", Icons.Filled.FileOpen, isAvailable = true, lastScanTime = uiState.zeroByteLastScan, onClick = onOpenZeroByte),
         QuickAction("Empty Folders", Icons.Filled.FolderOff, isAvailable = true, lastScanTime = uiState.emptyFolderLastScan, onClick = onOpenEmptyFolder),
         QuickAction("Large Files", Icons.Filled.Description, isAvailable = false),

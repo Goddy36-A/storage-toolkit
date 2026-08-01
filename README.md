@@ -26,11 +26,16 @@ scaffolded all at once. Currently implemented and functional:
   in their subtree (a folder full of only empty folders still counts). Only reports the
   outermost empty folder in a branch, since deleting it removes everything nested inside.
   Same skip-list and multi-select delete pattern as the other scanners.
+- **Duplicate File Scanner** — finds files with identical content (SHA-256 hash, not
+  just name/size) across the whole storage volume. Two-pass for performance: files are
+  first grouped by size (free), and only files sharing a size with another file get
+  actually hashed. Each group's oldest file is the suggested keeper; "Select duplicates
+  (keep 1 each)" pre-selects everything else for deletion. Sortable by wasted space,
+  name, or date.
 
-Not yet built: Duplicate Scanner, Large File Scanner, Storage Analyzer charts, Search,
-Recycle Bin, Scan History UI, Settings. The `ScanHistoryRepository`/Room database and
-clean-architecture folders for these already exist so they can be added without
-restructuring.
+Not yet built: Large File Scanner, Storage Analyzer charts, Search, Recycle Bin, Scan
+History UI, Settings. The `ScanHistoryRepository`/Room database and clean-architecture
+folders for these already exist so they can be added without restructuring.
 
 ## Architecture
 

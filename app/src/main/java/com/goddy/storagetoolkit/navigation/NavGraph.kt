@@ -10,12 +10,14 @@ import com.goddy.storagetoolkit.StorageToolkitApp
 import com.goddy.storagetoolkit.ui.apkmanager.ApkManagerScreen
 import com.goddy.storagetoolkit.ui.dashboard.DashboardScreen
 import com.goddy.storagetoolkit.ui.downloads.DownloadsScreen
+import com.goddy.storagetoolkit.ui.duplicate.DuplicateScreen
 import com.goddy.storagetoolkit.ui.emptyfolder.EmptyFolderScreen
 import com.goddy.storagetoolkit.ui.zerobyte.ZeroByteScreen
 import com.goddy.storagetoolkit.viewmodel.AppViewModelFactory
 import com.goddy.storagetoolkit.viewmodel.ApkManagerViewModel
 import com.goddy.storagetoolkit.viewmodel.DashboardViewModel
 import com.goddy.storagetoolkit.viewmodel.DownloadsViewModel
+import com.goddy.storagetoolkit.viewmodel.DuplicateViewModel
 import com.goddy.storagetoolkit.viewmodel.EmptyFolderViewModel
 import com.goddy.storagetoolkit.viewmodel.ZeroByteViewModel
 
@@ -31,7 +33,8 @@ fun AppNavGraph(app: StorageToolkitApp, navController: NavHostController = remem
                 onOpenDownloads = { navController.navigate(Screen.Downloads.route) },
                 onOpenApkManager = { navController.navigate(Screen.ApkManager.route) },
                 onOpenZeroByte = { navController.navigate(Screen.ZeroByte.route) },
-                onOpenEmptyFolder = { navController.navigate(Screen.EmptyFolder.route) }
+                onOpenEmptyFolder = { navController.navigate(Screen.EmptyFolder.route) },
+                onOpenDuplicate = { navController.navigate(Screen.Duplicate.route) }
             )
         }
         composable(Screen.Downloads.route) {
@@ -49,6 +52,10 @@ fun AppNavGraph(app: StorageToolkitApp, navController: NavHostController = remem
         composable(Screen.EmptyFolder.route) {
             val viewModel: EmptyFolderViewModel = viewModel(factory = factory)
             EmptyFolderScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
+        }
+        composable(Screen.Duplicate.route) {
+            val viewModel: DuplicateViewModel = viewModel(factory = factory)
+            DuplicateScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
         }
     }
 }

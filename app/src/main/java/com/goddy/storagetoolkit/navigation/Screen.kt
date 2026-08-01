@@ -6,4 +6,5 @@ sealed class Screen(val route: String) {
     data object ApkManager : Screen("apk_manager")
     data object ZeroByte : Screen("zero_byte")
     data object EmptyFolder : Screen("empty_folder")
+    data object Duplicate : Screen("duplicate")
 }
