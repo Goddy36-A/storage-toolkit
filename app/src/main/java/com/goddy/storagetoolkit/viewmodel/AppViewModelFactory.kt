@@ -17,19 +17,22 @@ class AppViewModelFactory(private val app: StorageToolkitApp) : ViewModelProvide
                 DownloadsViewModel(app.storageAccessManager, app.downloadsRepository, app.scanHistoryRepository) as T
 
             ApkManagerViewModel::class.java ->
-                ApkManagerViewModel(app.storageAccessManager, app.apkRepository, app.scanHistoryRepository) as T
+                ApkManagerViewModel(app.storageAccessManager, app.apkRepository, app.scanHistoryRepository, app.settingsManager) as T
 
             ZeroByteViewModel::class.java ->
-                ZeroByteViewModel(app.storageAccessManager, app.zeroByteRepository, app.scanHistoryRepository) as T
+                ZeroByteViewModel(app.storageAccessManager, app.zeroByteRepository, app.scanHistoryRepository, app.settingsManager) as T
 
             EmptyFolderViewModel::class.java ->
-                EmptyFolderViewModel(app.storageAccessManager, app.emptyFolderRepository, app.scanHistoryRepository) as T
+                EmptyFolderViewModel(app.storageAccessManager, app.emptyFolderRepository, app.scanHistoryRepository, app.settingsManager) as T
 
             DuplicateViewModel::class.java ->
-                DuplicateViewModel(app.storageAccessManager, app.duplicateRepository, app.scanHistoryRepository) as T
+                DuplicateViewModel(app.storageAccessManager, app.duplicateRepository, app.scanHistoryRepository, app.settingsManager) as T
 
             LargeFileViewModel::class.java ->
-                LargeFileViewModel(app.storageAccessManager, app.largeFileRepository, app.scanHistoryRepository) as T
+                LargeFileViewModel(app.storageAccessManager, app.largeFileRepository, app.scanHistoryRepository, app.settingsManager) as T
+
+            SettingsViewModel::class.java ->
+                SettingsViewModel(app.settingsManager) as T
 
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

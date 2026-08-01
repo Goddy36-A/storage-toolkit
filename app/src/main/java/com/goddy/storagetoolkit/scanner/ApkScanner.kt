@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.documentfile.provider.DocumentFile
 import com.goddy.storagetoolkit.models.ApkFileInfo
+import com.goddy.storagetoolkit.utils.FolderSkipRules
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
@@ -12,7 +13,8 @@ import java.io.File
 
 /**
  * Recursively finds .apk files across a folder tree and reads their install metadata.
- * Skips hidden folders and "Android", same as the other scanners.
+ * Skips hidden folders, "Android", and the user's Settings ignore list, same as the
+ * other scanners.
  *
  * PackageManager.getPackageArchiveInfo requires a real filesystem path. That's always
  * true now (All Files Access gives file:// paths directly), but we still copy into the
@@ -22,15 +24,14 @@ import java.io.File
  */
 class ApkScanner(private val context: Context) {
 
-    private val skippedFolderNames = setOf("Android")
+    suspend fun scan(root: DocumentFile, ignoredFolders: Set<String> = emptySet()): List<ApkFileInfo> =
+        withContext(Dispatchers.IO) {
+            val results = mutableListOf<ApkFileInfo>()
+            walk(root, results, ignoredFolders)
+            results
+        }
 
-    suspend fun scan(root: DocumentFile): List<ApkFileInfo> = withContext(Dispatchers.IO) {
-        val results = mutableListOf<ApkFileInfo>()
-        walk(root, results)
-        results
-    }
-
-    private suspend fun walk(folder: DocumentFile, results: MutableList<ApkFileInfo>) {
+    private suspend fun walk(folder: DocumentFile, results: MutableList<ApkFileInfo>, ignoredFolders: Set<String>) {
         currentCoroutineContext().ensureActive()
         val pm = context.packageManager
 
@@ -39,8 +40,8 @@ class ApkScanner(private val context: Context) {
             val name = child.name ?: continue
 
             if (child.isDirectory) {
-                if (name.startsWith(".") || name in skippedFolderNames) continue
-                walk(child, results)
+                if (FolderSkipRules.shouldSkip(name, ignoredFolders)) continue
+                walk(child, results, ignoredFolders)
                 continue
             }
 

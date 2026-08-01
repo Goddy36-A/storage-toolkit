@@ -25,7 +25,8 @@ data class ApkManagerUiState(
 class ApkManagerViewModel(
     private val storageAccessManager: StorageAccessManager,
     private val apkRepository: ApkRepository,
-    private val scanHistoryRepository: ScanHistoryRepository
+    private val scanHistoryRepository: ScanHistoryRepository,
+    private val settingsManager: com.goddy.storagetoolkit.data.datastore.SettingsManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ApkManagerUiState())
@@ -55,7 +56,7 @@ class ApkManagerViewModel(
         scanJob?.cancel()
         scanJob = viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isScanning = true, statusMessage = null)
-            val apks = apkRepository.scan(StorageRoots.primary())
+            val apks = apkRepository.scan(StorageRoots.primary(), settingsManager.currentIgnoredFolders())
             _uiState.value = _uiState.value.copy(isScanning = false, apkFiles = apks, selectedIds = emptySet())
         }
     }

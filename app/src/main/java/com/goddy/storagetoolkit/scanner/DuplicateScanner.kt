@@ -6,6 +6,7 @@ import com.goddy.storagetoolkit.models.DuplicateGroup
 import com.goddy.storagetoolkit.models.FileCategory
 import com.goddy.storagetoolkit.models.FileItem
 import com.goddy.storagetoolkit.utils.FileUtils
+import com.goddy.storagetoolkit.utils.FolderSkipRules
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
@@ -14,10 +15,10 @@ import java.security.MessageDigest
 
 /**
  * Finds duplicate files across a folder tree by content hash (SHA-256), not just
- * name/size. Skips hidden folders and "Android", same as the other scanners, and
- * skips zero-byte files (every empty file would hash identically and "duplicate"
- * with every other empty file, which isn't useful here -- that's what the
- * Zero-byte Scanner is for).
+ * name/size. Skips hidden folders, "Android", and the user's Settings ignore list,
+ * same as the other scanners, and skips zero-byte files (every empty file would hash
+ * identically and "duplicate" with every other empty file, which isn't useful here --
+ * that's what the Zero-byte Scanner is for).
  *
  * Two-pass for performance: files are first grouped by size (cheap, no I/O), and
  * only files that share a size with at least one other file get actually hashed.
@@ -26,47 +27,47 @@ import java.security.MessageDigest
  */
 class DuplicateScanner(private val context: Context) {
 
-    private val skippedFolderNames = setOf("Android")
+    suspend fun scan(root: DocumentFile, ignoredFolders: Set<String> = emptySet()): List<DuplicateGroup> =
+        withContext(Dispatchers.IO) {
+            val allFiles = mutableListOf<Pair<DocumentFile, String>>()
+            collect(root, "", allFiles, ignoredFolders)
 
-    suspend fun scan(root: DocumentFile): List<DuplicateGroup> = withContext(Dispatchers.IO) {
-        val allFiles = mutableListOf<Pair<DocumentFile, String>>()
-        collect(root, "", allFiles)
+            val sizeCandidates = allFiles
+                .filter { it.first.length() > 0L }
+                .groupBy { it.first.length() }
+                .values
+                .filter { it.size > 1 }
+                .flatten()
 
-        val sizeCandidates = allFiles
-            .filter { it.first.length() > 0L }
-            .groupBy { it.first.length() }
-            .values
-            .filter { it.size > 1 }
-            .flatten()
+            val hashGroups = mutableMapOf<String, MutableList<FileItem>>()
+            for ((doc, relativePath) in sizeCandidates) {
+                currentCoroutineContext().ensureActive()
+                val hash = hashFile(doc) ?: continue
+                val name = doc.name ?: continue
+                val extension = FileUtils.extensionOf(name)
+                val item = FileItem(
+                    documentId = doc.uri.toString(),
+                    uriString = doc.uri.toString(),
+                    name = name,
+                    extension = extension,
+                    sizeBytes = doc.length(),
+                    lastModified = doc.lastModified(),
+                    category = FileCategory.fromExtension(extension),
+                    relativePath = relativePath
+                )
+                hashGroups.getOrPut(hash) { mutableListOf() }.add(item)
+            }
 
-        val hashGroups = mutableMapOf<String, MutableList<FileItem>>()
-        for ((doc, relativePath) in sizeCandidates) {
-            currentCoroutineContext().ensureActive()
-            val hash = hashFile(doc) ?: continue
-            val name = doc.name ?: continue
-            val extension = FileUtils.extensionOf(name)
-            val item = FileItem(
-                documentId = doc.uri.toString(),
-                uriString = doc.uri.toString(),
-                name = name,
-                extension = extension,
-                sizeBytes = doc.length(),
-                lastModified = doc.lastModified(),
-                category = FileCategory.fromExtension(extension),
-                relativePath = relativePath
-            )
-            hashGroups.getOrPut(hash) { mutableListOf() }.add(item)
+            hashGroups.entries
+                .filter { it.value.size > 1 }
+                .map { (hash, files) -> DuplicateGroup(hash = hash, files = files.sortedBy { it.lastModified }) }
         }
-
-        hashGroups.entries
-            .filter { it.value.size > 1 }
-            .map { (hash, files) -> DuplicateGroup(hash = hash, files = files.sortedBy { it.lastModified }) }
-    }
 
     private suspend fun collect(
         folder: DocumentFile,
         relativePath: String,
-        results: MutableList<Pair<DocumentFile, String>>
+        results: MutableList<Pair<DocumentFile, String>>,
+        ignoredFolders: Set<String>
     ) {
         currentCoroutineContext().ensureActive()
         for (child in folder.listFiles()) {
@@ -74,9 +75,9 @@ class DuplicateScanner(private val context: Context) {
             val name = child.name ?: continue
 
             if (child.isDirectory) {
-                if (name.startsWith(".") || name in skippedFolderNames) continue
+                if (FolderSkipRules.shouldSkip(name, ignoredFolders)) continue
                 val childPath = if (relativePath.isEmpty()) name else "$relativePath/$name"
-                collect(child, childPath, results)
+                collect(child, childPath, results, ignoredFolders)
                 continue
             }
 

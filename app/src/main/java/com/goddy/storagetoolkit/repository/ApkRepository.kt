@@ -13,7 +13,8 @@ class ApkRepository(
     private val scanner: ApkScanner
 ) {
 
-    suspend fun scan(root: DocumentFile): List<ApkFileInfo> = scanner.scan(root)
+    suspend fun scan(root: DocumentFile, ignoredFolders: Set<String> = emptySet()): List<ApkFileInfo> =
+        scanner.scan(root, ignoredFolders)
 
     suspend fun delete(files: List<ApkFileInfo>): Int = withContext(Dispatchers.IO) {
         var deletedCount = 0

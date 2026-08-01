@@ -39,7 +39,19 @@ scaffolded all at once. Currently implemented and functional:
   bounded resolution so a multi-hundred-MB photo doesn't get fully loaded into memory
   just to preview it.
 
-Not yet built: Storage Analyzer charts, Search, Recycle Bin, Scan History UI, Settings.
+- **Settings** — real, functional preferences, not placeholders:
+  - **Theme**: System/Light/Dark, applied live via DataStore + `StorageToolkitTheme`
+  - **Ignored Folders**: user-added folder names are skipped by *every* scanner
+    (Duplicate, Zero-byte, Empty Folder, Large File, APK Manager), in addition to the
+    built-in hidden-folder and `Android/` skip
+  - **Recycle Bin auto-delete days**: stored now so it's ready once Recycle Bin ships
+    (not yet enforced, since there's no Recycle Bin to enforce it on)
+  - **Language**: English only today; the preference field exists so a choice isn't
+    lost once more languages are added
+  - **About** and **Privacy Policy**: static screens with accurate, current claims
+    about what the app does and doesn't do (no analytics, no network calls, no ads)
+
+Not yet built: Storage Analyzer charts, Search, Recycle Bin, Scan History UI.
 The `ScanHistoryRepository`/Room database and clean-architecture folders for these
 already exist so they can be added without restructuring.
 

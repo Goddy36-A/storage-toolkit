@@ -25,7 +25,8 @@ data class ZeroByteUiState(
 class ZeroByteViewModel(
     private val storageAccessManager: StorageAccessManager,
     private val zeroByteRepository: ZeroByteRepository,
-    private val scanHistoryRepository: ScanHistoryRepository
+    private val scanHistoryRepository: ScanHistoryRepository,
+    private val settingsManager: com.goddy.storagetoolkit.data.datastore.SettingsManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ZeroByteUiState())
@@ -56,7 +57,7 @@ class ZeroByteViewModel(
         scanJob?.cancel()
         scanJob = viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isScanning = true, statusMessage = null)
-            val files = zeroByteRepository.scan(StorageRoots.primary())
+            val files = zeroByteRepository.scan(StorageRoots.primary(), settingsManager.currentIgnoredFolders())
             scanHistoryRepository.record(
                 scanType = ScanType.ZERO_BYTE,
                 filesFound = files.size,

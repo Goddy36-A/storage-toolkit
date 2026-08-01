@@ -36,7 +36,8 @@ data class LargeFileUiState(
 class LargeFileViewModel(
     private val storageAccessManager: StorageAccessManager,
     private val largeFileRepository: LargeFileRepository,
-    private val scanHistoryRepository: ScanHistoryRepository
+    private val scanHistoryRepository: ScanHistoryRepository,
+    private val settingsManager: com.goddy.storagetoolkit.data.datastore.SettingsManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LargeFileUiState())
@@ -67,7 +68,7 @@ class LargeFileViewModel(
         scanJob?.cancel()
         scanJob = viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isScanning = true, statusMessage = null)
-            rawFiles = largeFileRepository.scan(StorageRoots.primary())
+            rawFiles = largeFileRepository.scan(StorageRoots.primary(), settingsManager.currentIgnoredFolders())
             scanHistoryRepository.record(
                 scanType = ScanType.LARGE_FILES,
                 filesFound = rawFiles.size,

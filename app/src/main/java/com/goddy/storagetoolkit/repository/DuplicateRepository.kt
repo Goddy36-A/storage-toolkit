@@ -14,7 +14,8 @@ class DuplicateRepository(
     private val scanner: DuplicateScanner
 ) {
 
-    suspend fun scan(root: DocumentFile): List<DuplicateGroup> = scanner.scan(root)
+    suspend fun scan(root: DocumentFile, ignoredFolders: Set<String> = emptySet()): List<DuplicateGroup> =
+        scanner.scan(root, ignoredFolders)
 
     suspend fun delete(files: List<FileItem>): Int = withContext(Dispatchers.IO) {
         var deletedCount = 0

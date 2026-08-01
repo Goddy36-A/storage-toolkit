@@ -13,6 +13,9 @@ import com.goddy.storagetoolkit.ui.downloads.DownloadsScreen
 import com.goddy.storagetoolkit.ui.duplicate.DuplicateScreen
 import com.goddy.storagetoolkit.ui.emptyfolder.EmptyFolderScreen
 import com.goddy.storagetoolkit.ui.largefile.LargeFileScreen
+import com.goddy.storagetoolkit.ui.settings.AboutScreen
+import com.goddy.storagetoolkit.ui.settings.PrivacyPolicyScreen
+import com.goddy.storagetoolkit.ui.settings.SettingsScreen
 import com.goddy.storagetoolkit.ui.zerobyte.ZeroByteScreen
 import com.goddy.storagetoolkit.viewmodel.AppViewModelFactory
 import com.goddy.storagetoolkit.viewmodel.ApkManagerViewModel
@@ -21,6 +24,7 @@ import com.goddy.storagetoolkit.viewmodel.DownloadsViewModel
 import com.goddy.storagetoolkit.viewmodel.DuplicateViewModel
 import com.goddy.storagetoolkit.viewmodel.EmptyFolderViewModel
 import com.goddy.storagetoolkit.viewmodel.LargeFileViewModel
+import com.goddy.storagetoolkit.viewmodel.SettingsViewModel
 import com.goddy.storagetoolkit.viewmodel.ZeroByteViewModel
 
 @Composable
@@ -37,7 +41,8 @@ fun AppNavGraph(app: StorageToolkitApp, navController: NavHostController = remem
                 onOpenZeroByte = { navController.navigate(Screen.ZeroByte.route) },
                 onOpenEmptyFolder = { navController.navigate(Screen.EmptyFolder.route) },
                 onOpenDuplicate = { navController.navigate(Screen.Duplicate.route) },
-                onOpenLargeFile = { navController.navigate(Screen.LargeFile.route) }
+                onOpenLargeFile = { navController.navigate(Screen.LargeFile.route) },
+                onOpenSettings = { navController.navigate(Screen.Settings.route) }
             )
         }
         composable(Screen.Downloads.route) {
@@ -63,6 +68,21 @@ fun AppNavGraph(app: StorageToolkitApp, navController: NavHostController = remem
         composable(Screen.LargeFile.route) {
             val viewModel: LargeFileViewModel = viewModel(factory = factory)
             LargeFileScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
+        }
+        composable(Screen.Settings.route) {
+            val viewModel: SettingsViewModel = viewModel(factory = factory)
+            SettingsScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() },
+                onOpenAbout = { navController.navigate(Screen.About.route) },
+                onOpenPrivacyPolicy = { navController.navigate(Screen.PrivacyPolicy.route) }
+            )
+        }
+        composable(Screen.About.route) {
+            AboutScreen(onBack = { navController.popBackStack() })
+        }
+        composable(Screen.PrivacyPolicy.route) {
+            PrivacyPolicyScreen(onBack = { navController.popBackStack() })
         }
     }
 }

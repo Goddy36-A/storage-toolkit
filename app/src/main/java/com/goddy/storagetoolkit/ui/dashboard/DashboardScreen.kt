@@ -57,7 +57,8 @@ fun DashboardScreen(
     onOpenZeroByte: () -> Unit,
     onOpenEmptyFolder: () -> Unit,
     onOpenDuplicate: () -> Unit,
-    onOpenLargeFile: () -> Unit
+    onOpenLargeFile: () -> Unit,
+    onOpenSettings: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -73,7 +74,18 @@ fun DashboardScreen(
         QuickAction("Documents", Icons.Filled.CreateNewFolder, isAvailable = false)
     )
 
-    Scaffold(topBar = { TopAppBar(title = { Text("Storage Toolkit") }) }) { padding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Storage Toolkit") },
+                actions = {
+                    androidx.compose.material3.IconButton(onClick = onOpenSettings) {
+                        Icon(androidx.compose.material.icons.Icons.Filled.Settings, contentDescription = "Settings")
+                    }
+                }
+            )
+        }
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

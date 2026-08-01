@@ -2,6 +2,7 @@ package com.goddy.storagetoolkit
 
 import android.app.Application
 import com.goddy.storagetoolkit.data.database.AppDatabase
+import com.goddy.storagetoolkit.data.datastore.SettingsManager
 import com.goddy.storagetoolkit.repository.ApkRepository
 import com.goddy.storagetoolkit.repository.DownloadsRepository
 import com.goddy.storagetoolkit.repository.DuplicateRepository
@@ -26,6 +27,8 @@ class StorageToolkitApp : Application() {
 
     lateinit var storageAccessManager: StorageAccessManager
         private set
+    lateinit var settingsManager: SettingsManager
+        private set
     lateinit var scanHistoryRepository: ScanHistoryRepository
         private set
     lateinit var downloadsRepository: DownloadsRepository
@@ -45,6 +48,7 @@ class StorageToolkitApp : Application() {
         super.onCreate()
 
         storageAccessManager = StorageAccessManager(this)
+        settingsManager = SettingsManager(this)
 
         val database = AppDatabase.getInstance(this)
         scanHistoryRepository = ScanHistoryRepository(database.scanHistoryDao())

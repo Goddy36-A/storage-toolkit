@@ -13,7 +13,8 @@ class EmptyFolderRepository(
     private val scanner: EmptyFolderScanner
 ) {
 
-    suspend fun scan(root: DocumentFile): List<FolderItem> = scanner.scan(root)
+    suspend fun scan(root: DocumentFile, ignoredFolders: Set<String> = emptySet()): List<FolderItem> =
+        scanner.scan(root, ignoredFolders)
 
     suspend fun delete(folders: List<FolderItem>): Int = withContext(Dispatchers.IO) {
         var deletedCount = 0

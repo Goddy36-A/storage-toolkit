@@ -25,7 +25,8 @@ data class EmptyFolderUiState(
 class EmptyFolderViewModel(
     private val storageAccessManager: StorageAccessManager,
     private val emptyFolderRepository: EmptyFolderRepository,
-    private val scanHistoryRepository: ScanHistoryRepository
+    private val scanHistoryRepository: ScanHistoryRepository,
+    private val settingsManager: com.goddy.storagetoolkit.data.datastore.SettingsManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EmptyFolderUiState())
@@ -55,7 +56,7 @@ class EmptyFolderViewModel(
         scanJob?.cancel()
         scanJob = viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isScanning = true, statusMessage = null)
-            val folders = emptyFolderRepository.scan(StorageRoots.primary())
+            val folders = emptyFolderRepository.scan(StorageRoots.primary(), settingsManager.currentIgnoredFolders())
             scanHistoryRepository.record(
                 scanType = ScanType.EMPTY_FOLDER,
                 filesFound = folders.size,

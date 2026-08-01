@@ -13,7 +13,8 @@ class ZeroByteRepository(
     private val scanner: ZeroByteScanner
 ) {
 
-    suspend fun scan(root: DocumentFile): List<FileItem> = scanner.scan(root)
+    suspend fun scan(root: DocumentFile, ignoredFolders: Set<String> = emptySet()): List<FileItem> =
+        scanner.scan(root, ignoredFolders)
 
     suspend fun delete(files: List<FileItem>): Int = withContext(Dispatchers.IO) {
         var deletedCount = 0

@@ -35,7 +35,8 @@ data class DuplicateUiState(
 class DuplicateViewModel(
     private val storageAccessManager: StorageAccessManager,
     private val duplicateRepository: DuplicateRepository,
-    private val scanHistoryRepository: ScanHistoryRepository
+    private val scanHistoryRepository: ScanHistoryRepository,
+    private val settingsManager: com.goddy.storagetoolkit.data.datastore.SettingsManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DuplicateUiState())
@@ -66,7 +67,7 @@ class DuplicateViewModel(
         scanJob?.cancel()
         scanJob = viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isScanning = true, statusMessage = null)
-            rawGroups = duplicateRepository.scan(StorageRoots.primary())
+            rawGroups = duplicateRepository.scan(StorageRoots.primary(), settingsManager.currentIgnoredFolders())
             val totalDuplicateFiles = rawGroups.sumOf { it.files.size - 1 }
             scanHistoryRepository.record(
                 scanType = ScanType.DUPLICATE_FILES,

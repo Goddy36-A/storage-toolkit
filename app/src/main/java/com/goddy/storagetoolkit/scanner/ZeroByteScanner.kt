@@ -4,36 +4,41 @@ import androidx.documentfile.provider.DocumentFile
 import com.goddy.storagetoolkit.models.FileCategory
 import com.goddy.storagetoolkit.models.FileItem
 import com.goddy.storagetoolkit.utils.FileUtils
+import com.goddy.storagetoolkit.utils.FolderSkipRules
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 
 /**
- * Recursively scans a SAF-granted folder tree for files whose size is exactly 0 bytes.
- * Skips hidden folders (leading '.') and "Android", which holds per-app protected
- * storage that scoped storage restricts access to anyway.
+ * Recursively scans a folder tree for files whose size is exactly 0 bytes.
+ * Skips hidden folders (leading '.'), "Android" (protected storage regardless), and
+ * anything the user has added to their ignore list in Settings.
  */
 class ZeroByteScanner {
 
-    private val skippedFolderNames = setOf("Android")
+    suspend fun scan(root: DocumentFile, ignoredFolders: Set<String> = emptySet()): List<FileItem> =
+        withContext(Dispatchers.IO) {
+            val results = mutableListOf<FileItem>()
+            walk(root, "", results, ignoredFolders)
+            results
+        }
 
-    suspend fun scan(root: DocumentFile): List<FileItem> = withContext(Dispatchers.IO) {
-        val results = mutableListOf<FileItem>()
-        walk(root, "", results)
-        results
-    }
-
-    private suspend fun walk(folder: DocumentFile, relativePath: String, results: MutableList<FileItem>) {
+    private suspend fun walk(
+        folder: DocumentFile,
+        relativePath: String,
+        results: MutableList<FileItem>,
+        ignoredFolders: Set<String>
+    ) {
         currentCoroutineContext().ensureActive()
         for (child in folder.listFiles()) {
             currentCoroutineContext().ensureActive()
             val name = child.name ?: continue
 
             if (child.isDirectory) {
-                if (name.startsWith(".") || name in skippedFolderNames) continue
+                if (FolderSkipRules.shouldSkip(name, ignoredFolders)) continue
                 val childPath = if (relativePath.isEmpty()) name else "$relativePath/$name"
-                walk(child, childPath, results)
+                walk(child, childPath, results, ignoredFolders)
                 continue
             }
 
