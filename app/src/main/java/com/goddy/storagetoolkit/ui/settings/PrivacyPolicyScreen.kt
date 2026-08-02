@@ -70,10 +70,12 @@ fun PrivacyPolicyScreen(onBack: () -> Unit) {
                     "there is no data collection to sell."
             )
             PolicySection(
-                title = "Deletion is real deletion",
-                body = "Until a Recycle Bin feature ships, every delete action in this app " +
-                    "permanently removes the file from your device. There is currently no " +
-                    "undo. Review selections carefully before confirming a delete."
+                title = "Deletion and the Recycle Bin",
+                body = "Deleting from Duplicate, Zero-byte, Large File, or APK Manager moves the " +
+                    "file to this app's private Recycle Bin instead of removing it immediately -- " +
+                    "you can restore it from Settings > Recycle Bin, or let it auto-delete after " +
+                    "your configured retention period. Empty Folder Cleaner deletes immediately, " +
+                    "without a Recycle Bin step, since an empty folder has no content to lose."
             )
         }
     }

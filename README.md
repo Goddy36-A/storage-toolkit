@@ -45,15 +45,23 @@ scaffolded all at once. Currently implemented and functional:
     (Duplicate, Zero-byte, Empty Folder, Large File, APK Manager), in addition to the
     built-in hidden-folder and `Android/` skip
   - **Recycle Bin auto-delete days**: stored now so it's ready once Recycle Bin ships
-    (not yet enforced, since there's no Recycle Bin to enforce it on)
+    -- now enforced, see Recycle Bin below
   - **Language**: English only today; the preference field exists so a choice isn't
     lost once more languages are added
   - **About** and **Privacy Policy**: static screens with accurate, current claims
     about what the app does and doesn't do (no analytics, no network calls, no ads)
+- **Recycle Bin** -- deletes from Duplicate, Zero-byte, Large File, and APK Manager
+  now move the file into this app's private storage instead of removing it outright.
+  Restore puts it back at its original path (recreating the parent folder if it's
+  gone); "Delete Forever" and "Empty Bin" remove it for real. Auto-delete after the
+  Settings-configured retention period is enforced opportunistically -- checked
+  whenever the Recycle Bin screen opens, since there's no background worker.
+  Empty Folder Cleaner is the one exception: it still deletes immediately, since an
+  empty folder has no content for a recycle bin to protect.
 
-Not yet built: Storage Analyzer charts, Search, Recycle Bin, Scan History UI.
-The `ScanHistoryRepository`/Room database and clean-architecture folders for these
-already exist so they can be added without restructuring.
+Not yet built: Storage Analyzer charts, Search, Scan History UI (the underlying
+`ScanHistoryRepository`/Room data already exists -- only a dedicated screen for it
+doesn't).
 
 ## Architecture
 

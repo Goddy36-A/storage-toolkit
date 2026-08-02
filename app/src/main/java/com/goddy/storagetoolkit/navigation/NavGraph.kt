@@ -15,6 +15,7 @@ import com.goddy.storagetoolkit.ui.emptyfolder.EmptyFolderScreen
 import com.goddy.storagetoolkit.ui.largefile.LargeFileScreen
 import com.goddy.storagetoolkit.ui.settings.AboutScreen
 import com.goddy.storagetoolkit.ui.settings.PrivacyPolicyScreen
+import com.goddy.storagetoolkit.ui.recyclebin.RecycleBinScreen
 import com.goddy.storagetoolkit.ui.settings.SettingsScreen
 import com.goddy.storagetoolkit.ui.zerobyte.ZeroByteScreen
 import com.goddy.storagetoolkit.viewmodel.AppViewModelFactory
@@ -24,6 +25,7 @@ import com.goddy.storagetoolkit.viewmodel.DownloadsViewModel
 import com.goddy.storagetoolkit.viewmodel.DuplicateViewModel
 import com.goddy.storagetoolkit.viewmodel.EmptyFolderViewModel
 import com.goddy.storagetoolkit.viewmodel.LargeFileViewModel
+import com.goddy.storagetoolkit.viewmodel.RecycleBinViewModel
 import com.goddy.storagetoolkit.viewmodel.SettingsViewModel
 import com.goddy.storagetoolkit.viewmodel.ZeroByteViewModel
 
@@ -75,8 +77,13 @@ fun AppNavGraph(app: StorageToolkitApp, navController: NavHostController = remem
                 viewModel = viewModel,
                 onBack = { navController.popBackStack() },
                 onOpenAbout = { navController.navigate(Screen.About.route) },
-                onOpenPrivacyPolicy = { navController.navigate(Screen.PrivacyPolicy.route) }
+                onOpenPrivacyPolicy = { navController.navigate(Screen.PrivacyPolicy.route) },
+                onOpenRecycleBin = { navController.navigate(Screen.RecycleBin.route) }
             )
+        }
+        composable(Screen.RecycleBin.route) {
+            val viewModel: RecycleBinViewModel = viewModel(factory = factory)
+            RecycleBinScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
         }
         composable(Screen.About.route) {
             AboutScreen(onBack = { navController.popBackStack() })

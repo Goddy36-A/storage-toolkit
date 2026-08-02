@@ -11,4 +11,5 @@ sealed class Screen(val route: String) {
     data object Settings : Screen("settings")
     data object About : Screen("about")
     data object PrivacyPolicy : Screen("privacy_policy")
+    data object RecycleBin : Screen("recycle_bin")
 }

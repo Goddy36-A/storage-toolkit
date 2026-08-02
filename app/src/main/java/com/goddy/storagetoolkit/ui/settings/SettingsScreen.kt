@@ -44,7 +44,8 @@ fun SettingsScreen(
     viewModel: SettingsViewModel,
     onBack: () -> Unit,
     onOpenAbout: () -> Unit,
-    onOpenPrivacyPolicy: () -> Unit
+    onOpenPrivacyPolicy: () -> Unit,
+    onOpenRecycleBin: () -> Unit
 ) {
     val settings by viewModel.settings.collectAsState()
     var newFolderText by remember { mutableStateOf("") }
@@ -81,7 +82,8 @@ fun SettingsScreen(
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
-                        "Applies once the Recycle Bin feature ships — saved now so it's ready.",
+                        "Deleted files from Duplicate, Zero-byte, Large File, and APK Manager " +
+                            "wait here before being removed for good.",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -92,6 +94,7 @@ fun SettingsScreen(
                         steps = 88
                     )
                 }
+                SettingsNavRow(title = "View Recycle Bin", onClick = onOpenRecycleBin)
             }
 
             item { Divider(modifier = Modifier.padding(vertical = 12.dp)) }

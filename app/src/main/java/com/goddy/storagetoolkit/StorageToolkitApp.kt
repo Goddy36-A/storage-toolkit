@@ -8,6 +8,7 @@ import com.goddy.storagetoolkit.repository.DownloadsRepository
 import com.goddy.storagetoolkit.repository.DuplicateRepository
 import com.goddy.storagetoolkit.repository.EmptyFolderRepository
 import com.goddy.storagetoolkit.repository.LargeFileRepository
+import com.goddy.storagetoolkit.repository.RecycleBinRepository
 import com.goddy.storagetoolkit.repository.ScanHistoryRepository
 import com.goddy.storagetoolkit.repository.ZeroByteRepository
 import com.goddy.storagetoolkit.scanner.ApkScanner
@@ -31,6 +32,8 @@ class StorageToolkitApp : Application() {
         private set
     lateinit var scanHistoryRepository: ScanHistoryRepository
         private set
+    lateinit var recycleBinRepository: RecycleBinRepository
+        private set
     lateinit var downloadsRepository: DownloadsRepository
         private set
     lateinit var apkRepository: ApkRepository
@@ -52,12 +55,13 @@ class StorageToolkitApp : Application() {
 
         val database = AppDatabase.getInstance(this)
         scanHistoryRepository = ScanHistoryRepository(database.scanHistoryDao())
+        recycleBinRepository = RecycleBinRepository(this, database.recycleBinDao())
 
         downloadsRepository = DownloadsRepository(DownloadsScanner())
-        apkRepository = ApkRepository(this, ApkScanner(this))
-        zeroByteRepository = ZeroByteRepository(this, ZeroByteScanner())
+        apkRepository = ApkRepository(ApkScanner(this), recycleBinRepository)
+        zeroByteRepository = ZeroByteRepository(ZeroByteScanner(), recycleBinRepository)
         emptyFolderRepository = EmptyFolderRepository(this, EmptyFolderScanner())
-        duplicateRepository = DuplicateRepository(this, DuplicateScanner(this))
-        largeFileRepository = LargeFileRepository(this, LargeFileScanner())
+        duplicateRepository = DuplicateRepository(DuplicateScanner(this), recycleBinRepository)
+        largeFileRepository = LargeFileRepository(LargeFileScanner(), recycleBinRepository)
     }
 }
