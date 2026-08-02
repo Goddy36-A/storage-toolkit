@@ -18,7 +18,6 @@ Daemon will be stopped at the end of the build
 > Task :app:parseDebugLocalResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
-> Task :app:processDebugManifestForPackage
 > Task :app:javaPreCompileDebug
 > Task :app:mergeDebugShaders
 > Task :app:compileDebugShaders NO-SOURCE
@@ -29,13 +28,14 @@ Daemon will be stopped at the end of the build
 > Task :app:mergeDebugStartupProfile
 > Task :app:mergeDebugJniLibFolders
 > Task :app:checkDebugDuplicateClasses
-> Task :app:processDebugResources
 > Task :app:mergeDebugNativeLibs
+> Task :app:processDebugManifestForPackage
 > Task :app:mergeLibDexDebug
 
 > Task :app:stripDebugDebugSymbols
 Unable to strip the following libraries, packaging them as they are: libdatastore_shared_counter.so.
 
+> Task :app:processDebugResources
 > Task :app:validateSigningDebug
 > Task :app:writeDebugAppMetadata
 > Task :app:writeDebugSigningConfigVersions
@@ -58,6 +58,7 @@ w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/co
 w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/settings/SettingsScreen.kt:100:20 'Divider(Modifier = ..., Dp = ..., Color = ...): Unit' is deprecated. Renamed to HorizontalDivider
 w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/settings/SettingsScreen.kt:148:20 'Divider(Modifier = ..., Dp = ..., Color = ...): Unit' is deprecated. Renamed to HorizontalDivider
 w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/settings/SettingsScreen.kt:166:20 'Divider(Modifier = ..., Dp = ..., Color = ...): Unit' is deprecated. Renamed to HorizontalDivider
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/storageanalyzer/StorageAnalyzerScreen.kt:53:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
 w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/zerobyte/ZeroByteScreen.kt:59:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
 
 > Task :app:compileDebugJavaWithJavac
@@ -69,7 +70,7 @@ w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/co
 > Task :app:packageDebug
 > Task :app:createDebugApkListingFileRedirect
 > Task :app:assembleDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1785631854728.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1785632303947.json
 
 [Incubating] Problems report is available at: file:///home/runner/work/storage-toolkit/storage-toolkit/build/reports/problems/problems-report.html
 
@@ -79,7 +80,7 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 1m 4s
+BUILD SUCCESSFUL in 1m 5s
 40 actionable tasks: 40 executed
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.6.1/userguide/configuration_cache_enabling.html
 
