@@ -55,6 +55,13 @@ data class DuplicateGroup(
         get() = if (files.size <= 1) 0L else files.drop(1).sumOf { it.sizeBytes }
 }
 
+/** Per-category totals shown in the Storage Analyzer. */
+data class CategoryBreakdown(
+    val category: FileCategory,
+    val fileCount: Int,
+    val totalSizeBytes: Long
+)
+
 data class StorageStats(
     val totalBytes: Long,
     val usedBytes: Long,

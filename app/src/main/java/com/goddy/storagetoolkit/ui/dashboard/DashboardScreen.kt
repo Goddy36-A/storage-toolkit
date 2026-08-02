@@ -60,7 +60,8 @@ fun DashboardScreen(
     onOpenEmptyFolder: () -> Unit,
     onOpenDuplicate: () -> Unit,
     onOpenLargeFile: () -> Unit,
-    onOpenSettings: () -> Unit
+    onOpenSettings: () -> Unit,
+    onOpenStorageAnalyzer: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -97,7 +98,7 @@ fun DashboardScreen(
             Surface(
                 shape = RoundedCornerShape(20.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().clickable(onClick = onOpenStorageAnalyzer)
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth().padding(20.dp),
@@ -111,6 +112,12 @@ fun DashboardScreen(
                         text = "${FileUtils.formatSize(uiState.storageStats.usedBytes)} used of ${FileUtils.formatSize(uiState.storageStats.totalBytes)}",
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(top = 12.dp)
+                    )
+                    Text(
+                        text = "Tap to see what's using space",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 2.dp)
                     )
                 }
             }

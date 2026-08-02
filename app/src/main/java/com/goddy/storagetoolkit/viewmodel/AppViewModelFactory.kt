@@ -37,6 +37,9 @@ class AppViewModelFactory(private val app: StorageToolkitApp) : ViewModelProvide
             RecycleBinViewModel::class.java ->
                 RecycleBinViewModel(app.recycleBinRepository, app.settingsManager) as T
 
+            StorageAnalyzerViewModel::class.java ->
+                StorageAnalyzerViewModel(app.storageAccessManager, app.storageAnalyzerRepository, app.settingsManager) as T
+
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     }

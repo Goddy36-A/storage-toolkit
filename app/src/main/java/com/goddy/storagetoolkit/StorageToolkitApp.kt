@@ -10,12 +10,14 @@ import com.goddy.storagetoolkit.repository.EmptyFolderRepository
 import com.goddy.storagetoolkit.repository.LargeFileRepository
 import com.goddy.storagetoolkit.repository.RecycleBinRepository
 import com.goddy.storagetoolkit.repository.ScanHistoryRepository
+import com.goddy.storagetoolkit.repository.StorageAnalyzerRepository
 import com.goddy.storagetoolkit.repository.ZeroByteRepository
 import com.goddy.storagetoolkit.scanner.ApkScanner
 import com.goddy.storagetoolkit.scanner.DownloadsScanner
 import com.goddy.storagetoolkit.scanner.DuplicateScanner
 import com.goddy.storagetoolkit.scanner.EmptyFolderScanner
 import com.goddy.storagetoolkit.scanner.LargeFileScanner
+import com.goddy.storagetoolkit.scanner.StorageAnalyzerScanner
 import com.goddy.storagetoolkit.scanner.ZeroByteScanner
 import com.goddy.storagetoolkit.utils.StorageAccessManager
 
@@ -46,6 +48,8 @@ class StorageToolkitApp : Application() {
         private set
     lateinit var largeFileRepository: LargeFileRepository
         private set
+    lateinit var storageAnalyzerRepository: StorageAnalyzerRepository
+        private set
 
     override fun onCreate() {
         super.onCreate()
@@ -63,5 +67,6 @@ class StorageToolkitApp : Application() {
         emptyFolderRepository = EmptyFolderRepository(this, EmptyFolderScanner())
         duplicateRepository = DuplicateRepository(DuplicateScanner(this), recycleBinRepository)
         largeFileRepository = LargeFileRepository(LargeFileScanner(), recycleBinRepository)
+        storageAnalyzerRepository = StorageAnalyzerRepository(StorageAnalyzerScanner())
     }
 }

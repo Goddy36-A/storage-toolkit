@@ -58,10 +58,14 @@ scaffolded all at once. Currently implemented and functional:
   whenever the Recycle Bin screen opens, since there's no background worker.
   Empty Folder Cleaner is the one exception: it still deletes immediately, since an
   empty folder has no content for a recycle bin to protect.
+- **Storage Analyzer** -- tap the storage overview card on the Dashboard for a
+  category-by-category breakdown (Images/Videos/Audio/Documents/Archives/APKs/Others):
+  file count + total size per category, as a horizontal bar chart sized relative to
+  the largest category. One recursive pass over the whole accessible storage volume,
+  respecting the same ignore list as every other scanner.
 
-Not yet built: Storage Analyzer charts, Search, Scan History UI (the underlying
-`ScanHistoryRepository`/Room data already exists -- only a dedicated screen for it
-doesn't).
+Not yet built: Search, Scan History UI (the underlying `ScanHistoryRepository`/Room
+data already exists -- only a dedicated screen for it doesn't).
 
 ## Architecture
 

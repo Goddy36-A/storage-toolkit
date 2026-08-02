@@ -17,6 +17,7 @@ import com.goddy.storagetoolkit.ui.settings.AboutScreen
 import com.goddy.storagetoolkit.ui.settings.PrivacyPolicyScreen
 import com.goddy.storagetoolkit.ui.recyclebin.RecycleBinScreen
 import com.goddy.storagetoolkit.ui.settings.SettingsScreen
+import com.goddy.storagetoolkit.ui.storageanalyzer.StorageAnalyzerScreen
 import com.goddy.storagetoolkit.ui.zerobyte.ZeroByteScreen
 import com.goddy.storagetoolkit.viewmodel.AppViewModelFactory
 import com.goddy.storagetoolkit.viewmodel.ApkManagerViewModel
@@ -27,6 +28,7 @@ import com.goddy.storagetoolkit.viewmodel.EmptyFolderViewModel
 import com.goddy.storagetoolkit.viewmodel.LargeFileViewModel
 import com.goddy.storagetoolkit.viewmodel.RecycleBinViewModel
 import com.goddy.storagetoolkit.viewmodel.SettingsViewModel
+import com.goddy.storagetoolkit.viewmodel.StorageAnalyzerViewModel
 import com.goddy.storagetoolkit.viewmodel.ZeroByteViewModel
 
 @Composable
@@ -44,7 +46,8 @@ fun AppNavGraph(app: StorageToolkitApp, navController: NavHostController = remem
                 onOpenEmptyFolder = { navController.navigate(Screen.EmptyFolder.route) },
                 onOpenDuplicate = { navController.navigate(Screen.Duplicate.route) },
                 onOpenLargeFile = { navController.navigate(Screen.LargeFile.route) },
-                onOpenSettings = { navController.navigate(Screen.Settings.route) }
+                onOpenSettings = { navController.navigate(Screen.Settings.route) },
+                onOpenStorageAnalyzer = { navController.navigate(Screen.StorageAnalyzer.route) }
             )
         }
         composable(Screen.Downloads.route) {
@@ -90,6 +93,10 @@ fun AppNavGraph(app: StorageToolkitApp, navController: NavHostController = remem
         }
         composable(Screen.PrivacyPolicy.route) {
             PrivacyPolicyScreen(onBack = { navController.popBackStack() })
+        }
+        composable(Screen.StorageAnalyzer.route) {
+            val viewModel: StorageAnalyzerViewModel = viewModel(factory = factory)
+            StorageAnalyzerScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
         }
     }
 }
