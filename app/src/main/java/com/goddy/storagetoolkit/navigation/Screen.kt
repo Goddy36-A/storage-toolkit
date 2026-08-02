@@ -13,4 +13,5 @@ sealed class Screen(val route: String) {
     data object PrivacyPolicy : Screen("privacy_policy")
     data object RecycleBin : Screen("recycle_bin")
     data object StorageAnalyzer : Screen("storage_analyzer")
+    data object Search : Screen("search")
 }

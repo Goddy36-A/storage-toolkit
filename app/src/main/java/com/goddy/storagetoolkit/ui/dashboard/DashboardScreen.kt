@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material.icons.filled.FolderOff
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -61,7 +62,8 @@ fun DashboardScreen(
     onOpenDuplicate: () -> Unit,
     onOpenLargeFile: () -> Unit,
     onOpenSettings: () -> Unit,
-    onOpenStorageAnalyzer: () -> Unit
+    onOpenStorageAnalyzer: () -> Unit,
+    onOpenSearch: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -82,6 +84,9 @@ fun DashboardScreen(
             TopAppBar(
                 title = { Text("Storage Toolkit") },
                 actions = {
+                    IconButton(onClick = onOpenSearch) {
+                        Icon(Icons.Filled.Search, contentDescription = "Search")
+                    }
                     IconButton(onClick = onOpenSettings) {
                         Icon(Icons.Filled.Settings, contentDescription = "Settings")
                     }

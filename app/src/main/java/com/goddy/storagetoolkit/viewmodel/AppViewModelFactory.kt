@@ -40,6 +40,9 @@ class AppViewModelFactory(private val app: StorageToolkitApp) : ViewModelProvide
             StorageAnalyzerViewModel::class.java ->
                 StorageAnalyzerViewModel(app.storageAccessManager, app.storageAnalyzerRepository, app.settingsManager) as T
 
+            SearchViewModel::class.java ->
+                SearchViewModel(app.storageAccessManager, app.searchRepository, app.settingsManager) as T
+
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     }

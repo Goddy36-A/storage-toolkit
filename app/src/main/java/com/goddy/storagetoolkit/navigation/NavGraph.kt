@@ -16,6 +16,7 @@ import com.goddy.storagetoolkit.ui.largefile.LargeFileScreen
 import com.goddy.storagetoolkit.ui.settings.AboutScreen
 import com.goddy.storagetoolkit.ui.settings.PrivacyPolicyScreen
 import com.goddy.storagetoolkit.ui.recyclebin.RecycleBinScreen
+import com.goddy.storagetoolkit.ui.search.SearchScreen
 import com.goddy.storagetoolkit.ui.settings.SettingsScreen
 import com.goddy.storagetoolkit.ui.storageanalyzer.StorageAnalyzerScreen
 import com.goddy.storagetoolkit.ui.zerobyte.ZeroByteScreen
@@ -27,6 +28,7 @@ import com.goddy.storagetoolkit.viewmodel.DuplicateViewModel
 import com.goddy.storagetoolkit.viewmodel.EmptyFolderViewModel
 import com.goddy.storagetoolkit.viewmodel.LargeFileViewModel
 import com.goddy.storagetoolkit.viewmodel.RecycleBinViewModel
+import com.goddy.storagetoolkit.viewmodel.SearchViewModel
 import com.goddy.storagetoolkit.viewmodel.SettingsViewModel
 import com.goddy.storagetoolkit.viewmodel.StorageAnalyzerViewModel
 import com.goddy.storagetoolkit.viewmodel.ZeroByteViewModel
@@ -47,7 +49,8 @@ fun AppNavGraph(app: StorageToolkitApp, navController: NavHostController = remem
                 onOpenDuplicate = { navController.navigate(Screen.Duplicate.route) },
                 onOpenLargeFile = { navController.navigate(Screen.LargeFile.route) },
                 onOpenSettings = { navController.navigate(Screen.Settings.route) },
-                onOpenStorageAnalyzer = { navController.navigate(Screen.StorageAnalyzer.route) }
+                onOpenStorageAnalyzer = { navController.navigate(Screen.StorageAnalyzer.route) },
+                onOpenSearch = { navController.navigate(Screen.Search.route) }
             )
         }
         composable(Screen.Downloads.route) {
@@ -97,6 +100,10 @@ fun AppNavGraph(app: StorageToolkitApp, navController: NavHostController = remem
         composable(Screen.StorageAnalyzer.route) {
             val viewModel: StorageAnalyzerViewModel = viewModel(factory = factory)
             StorageAnalyzerScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
+        }
+        composable(Screen.Search.route) {
+            val viewModel: SearchViewModel = viewModel(factory = factory)
+            SearchScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
         }
     }
 }
