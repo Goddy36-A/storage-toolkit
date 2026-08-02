@@ -28,8 +28,8 @@ Daemon will be stopped at the end of the build
 > Task :app:mergeDebugStartupProfile
 > Task :app:mergeDebugJniLibFolders
 > Task :app:checkDebugDuplicateClasses
-> Task :app:mergeDebugNativeLibs
 > Task :app:processDebugManifestForPackage
+> Task :app:mergeDebugNativeLibs
 > Task :app:mergeLibDexDebug
 
 > Task :app:stripDebugDebugSymbols
@@ -51,6 +51,7 @@ w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/co
 w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/largefile/LargeFileScreen.kt:81:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
 w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/largefile/LargeFileScreen.kt:88:51 'Sort: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Sort
 w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/recyclebin/RecycleBinScreen.kt:46:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/search/SearchScreen.kt:65:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
 w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/settings/AboutScreen.kt:31:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
 w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/settings/PrivacyPolicyScreen.kt:30:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
 w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/com/goddy/storagetoolkit/ui/settings/SettingsScreen.kt:59:43 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
@@ -70,7 +71,7 @@ w: file:///home/runner/work/storage-toolkit/storage-toolkit/app/src/main/java/co
 > Task :app:packageDebug
 > Task :app:createDebugApkListingFileRedirect
 > Task :app:assembleDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1785632303947.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1785633535879.json
 
 [Incubating] Problems report is available at: file:///home/runner/work/storage-toolkit/storage-toolkit/build/reports/problems/problems-report.html
 
@@ -80,7 +81,7 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 1m 5s
+BUILD SUCCESSFUL in 1m 3s
 40 actionable tasks: 40 executed
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.6.1/userguide/configuration_cache_enabling.html
 
