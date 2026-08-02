@@ -45,7 +45,8 @@ fun SettingsScreen(
     onBack: () -> Unit,
     onOpenAbout: () -> Unit,
     onOpenPrivacyPolicy: () -> Unit,
-    onOpenRecycleBin: () -> Unit
+    onOpenRecycleBin: () -> Unit,
+    onOpenScanHistory: () -> Unit
 ) {
     val settings by viewModel.settings.collectAsState()
     var newFolderText by remember { mutableStateOf("") }
@@ -166,6 +167,7 @@ fun SettingsScreen(
             item { Divider(modifier = Modifier.padding(vertical = 12.dp)) }
 
             item {
+                SettingsNavRow(title = "Scan History", onClick = onOpenScanHistory)
                 SettingsNavRow(title = "About", onClick = onOpenAbout)
                 SettingsNavRow(title = "Privacy Policy", onClick = onOpenPrivacyPolicy)
             }

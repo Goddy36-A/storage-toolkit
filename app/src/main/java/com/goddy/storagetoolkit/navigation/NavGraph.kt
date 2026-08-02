@@ -16,6 +16,7 @@ import com.goddy.storagetoolkit.ui.largefile.LargeFileScreen
 import com.goddy.storagetoolkit.ui.settings.AboutScreen
 import com.goddy.storagetoolkit.ui.settings.PrivacyPolicyScreen
 import com.goddy.storagetoolkit.ui.recyclebin.RecycleBinScreen
+import com.goddy.storagetoolkit.ui.scanhistory.ScanHistoryScreen
 import com.goddy.storagetoolkit.ui.search.SearchScreen
 import com.goddy.storagetoolkit.ui.settings.SettingsScreen
 import com.goddy.storagetoolkit.ui.storageanalyzer.StorageAnalyzerScreen
@@ -28,6 +29,7 @@ import com.goddy.storagetoolkit.viewmodel.DuplicateViewModel
 import com.goddy.storagetoolkit.viewmodel.EmptyFolderViewModel
 import com.goddy.storagetoolkit.viewmodel.LargeFileViewModel
 import com.goddy.storagetoolkit.viewmodel.RecycleBinViewModel
+import com.goddy.storagetoolkit.viewmodel.ScanHistoryViewModel
 import com.goddy.storagetoolkit.viewmodel.SearchViewModel
 import com.goddy.storagetoolkit.viewmodel.SettingsViewModel
 import com.goddy.storagetoolkit.viewmodel.StorageAnalyzerViewModel
@@ -84,7 +86,8 @@ fun AppNavGraph(app: StorageToolkitApp, navController: NavHostController = remem
                 onBack = { navController.popBackStack() },
                 onOpenAbout = { navController.navigate(Screen.About.route) },
                 onOpenPrivacyPolicy = { navController.navigate(Screen.PrivacyPolicy.route) },
-                onOpenRecycleBin = { navController.navigate(Screen.RecycleBin.route) }
+                onOpenRecycleBin = { navController.navigate(Screen.RecycleBin.route) },
+                onOpenScanHistory = { navController.navigate(Screen.ScanHistory.route) }
             )
         }
         composable(Screen.RecycleBin.route) {
@@ -104,6 +107,10 @@ fun AppNavGraph(app: StorageToolkitApp, navController: NavHostController = remem
         composable(Screen.Search.route) {
             val viewModel: SearchViewModel = viewModel(factory = factory)
             SearchScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
+        }
+        composable(Screen.ScanHistory.route) {
+            val viewModel: ScanHistoryViewModel = viewModel(factory = factory)
+            ScanHistoryScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
         }
     }
 }

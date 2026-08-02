@@ -30,4 +30,6 @@ class ScanHistoryRepository(private val dao: ScanHistoryDao) {
     }
 
     suspend fun lastScanTime(scanType: ScanType): Long? = dao.lastScanFor(scanType.key)?.scanDate
+
+    suspend fun clearHistory() = dao.deleteAll()
 }

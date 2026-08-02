@@ -14,4 +14,5 @@ sealed class Screen(val route: String) {
     data object RecycleBin : Screen("recycle_bin")
     data object StorageAnalyzer : Screen("storage_analyzer")
     data object Search : Screen("search")
+    data object ScanHistory : Screen("scan_history")
 }

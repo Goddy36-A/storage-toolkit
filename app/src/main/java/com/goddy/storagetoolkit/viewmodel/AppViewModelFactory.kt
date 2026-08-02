@@ -43,6 +43,9 @@ class AppViewModelFactory(private val app: StorageToolkitApp) : ViewModelProvide
             SearchViewModel::class.java ->
                 SearchViewModel(app.storageAccessManager, app.searchRepository, app.settingsManager) as T
 
+            ScanHistoryViewModel::class.java ->
+                ScanHistoryViewModel(app.scanHistoryRepository) as T
+
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     }

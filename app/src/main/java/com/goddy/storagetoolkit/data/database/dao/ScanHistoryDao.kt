@@ -17,4 +17,7 @@ interface ScanHistoryDao {
 
     @Query("SELECT * FROM scan_history WHERE scanType = :scanType ORDER BY scanDate DESC LIMIT 1")
     suspend fun lastScanFor(scanType: String): ScanHistoryEntity?
+
+    @Query("DELETE FROM scan_history")
+    suspend fun deleteAll()
 }
